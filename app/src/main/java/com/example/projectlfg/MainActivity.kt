@@ -1,7 +1,10 @@
 package com.example.projectlfg
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.projectlfg.event_map.MapsFragment
@@ -9,6 +12,16 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
+
+    // To be used possibly with screen updates and login
+    private var loginMade = true;
+
+    // Buttons
+    private lateinit var viewJoinedEventsButton: Button
+    private lateinit var findNewEventButton: Button
+    private lateinit var viewUserProfileButton: Button
+    private lateinit var viewContactsButton: Button
+
 
     // Code for fragment implementation for gps map
     // Thinking to use activity instead
@@ -34,6 +47,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Utilities.checkPermissions(this)
+        initButtons()
+
+        findNewEventButton.setOnClickListener(View.OnClickListener {
+            // temp
+            val intent = Intent(this, MapsActivity::class.java)
+            startActivity(intent)
+        })
+
         // Code I used to view fragment
         /*
         // temp way to display map fragment
@@ -58,5 +80,12 @@ class MainActivity : AppCompatActivity() {
 
         // Used with fragment test of 
         //tabLayoutMediator.detach()
+    }
+
+    fun initButtons() {
+        viewJoinedEventsButton = findViewById(R.id.view_joined_events_button)
+        findNewEventButton = findViewById(R.id.find_new_events_button)
+        viewUserProfileButton = findViewById(R.id.view_profile_settings_button)
+        viewContactsButton = findViewById(R.id.view_contacts_button)
     }
 }

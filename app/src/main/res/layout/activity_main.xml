@@ -3,17 +3,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/activity_main">
+    android:id="@+id/activity_main"
+    android:orientation="vertical">
 
-    <com.google.android.material.tabs.TabLayout
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+    <Button
+        android:id="@+id/view_joined_events_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tab_layout"/>
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="10dp"
+        android:text="@string/join_events"
+        android:textSize="20sp"/>
 
-    <androidx.viewpager2.widget.ViewPager2
+    <Button
+        android:id="@+id/find_new_events_button"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/view_pager_2"
-        android:layout_below="@id/tab_layout"/>
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="10dp"
+        android:text="@string/find_new_event"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/view_profile_settings_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="10dp"
+        android:text="@string/profile_settings"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/view_contacts_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="10dp"
+        android:text="@string/view_contacts"
+        android:textSize="20sp"/>
+    </LinearLayout>
 
 </RelativeLayout>

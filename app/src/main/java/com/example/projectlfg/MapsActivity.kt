@@ -1,5 +1,9 @@
 package com.example.projectlfg
 
+import android.location.Criteria
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
@@ -13,8 +17,13 @@ import com.example.projectlfg.databinding.ActivityMapsBinding
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    // Set location variables to use if a event address/latlng not given
+    private lateinit var locationManager: LocationManager
+
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+
+    private var givenLocation = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +35,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
     }
 
     /**
@@ -39,10 +49,37 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        if (!givenLocation) {
+            initLocationManager()
+        }
     }
+
+    fun initLocationManager() {
+        try {
+            locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+            val criteria = Criteria()
+            criteria.accuracy = Criteria.ACCURACY_FINE
+            val provider = locationManager.getBestProvider(criteria,true)
+            if (provider != null) {
+                val location = locationManager.getLastKnownLocation(provider)
+                if (location != null) {
+                    onLocationChanged(location)
+                }
+            }
+        }catch (e: Exception) {
+            println("Debug: exception initLocationManager")
+        }
+    }
+
+    //override
+    fun onLocationChanged(location: Location)  {
+        val lat = location.latitude
+        val lng = location.longitude
+        val latlng = LatLng(lat, lng)
+
+        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latlng, 10f)
+        mMap.animateCamera(cameraUpdate)
+    }
+
+
 }

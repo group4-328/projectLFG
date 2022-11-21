@@ -1,5 +1,10 @@
 package com.example.projectlfg.event_map
 
+// Idea:
+// - should have camera start either at a wanted location or users last know location
+//      - need permissions
+//      - wanted location may be easier with an activity
+
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
