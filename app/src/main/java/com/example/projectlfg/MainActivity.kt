@@ -10,6 +10,10 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
 
+    // Code for fragment implementation for gps map
+    // Thinking to use activity instead
+    // can easily change back later
+    /*
     // Fragments to be put into an array
     private lateinit var mapsFragment: MapsFragment
     // fragment array
@@ -24,12 +28,14 @@ class MainActivity : AppCompatActivity() {
     // Tab config strategy and layout mediator
     private lateinit var tabConfigurationStrategy: TabLayoutMediator.TabConfigurationStrategy
     private lateinit var tabLayoutMediator: TabLayoutMediator
-
+    */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Code I used to view fragment
+        /*
         // temp way to display map fragment
         mapsFragment = MapsFragment()
         fragments = ArrayList()
@@ -44,10 +50,13 @@ class MainActivity : AppCompatActivity() {
             }
         tabLayoutMediator = TabLayoutMediator(tabLayout, viewPager2, tabConfigurationStrategy)
         tabLayoutMediator.attach()
+        */
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        tabLayoutMediator.detach()
+
+        // Used with fragment test of 
+        //tabLayoutMediator.detach()
     }
 }
