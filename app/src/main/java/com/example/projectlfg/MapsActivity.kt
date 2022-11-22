@@ -6,6 +6,8 @@ import android.location.LocationListener
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.View.OnLongClickListener
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -15,7 +17,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.projectlfg.databinding.ActivityMapsBinding
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+
+    companion object {
+        val latLngKey = "lat_lng_key"
+    }
 
     // Set location variables to use if a event address/latlng not given
     private lateinit var locationManager: LocationManager
@@ -52,6 +58,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (!givenLocation) {
             initLocationManager()
         }
+
+        mMap.setOnMapLongClickListener(this)
     }
 
     fun initLocationManager() {
@@ -81,5 +89,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.animateCamera(cameraUpdate)
     }
 
+    // call create new event dialog
+    override fun onMapLongClick(latLng: LatLng) {
+        println("Debug: lat=${latLng.latitude}, lng=${latLng.longitude}")
+        var bundle = Bundle()
+        bundle.putParcelable(latLngKey, latLng)
+        var createEventDialog = CreateEventDialog()
+        createEventDialog.arguments = bundle
+        createEventDialog.show(supportFragmentManager, "createEvent")
+    }
 
 }

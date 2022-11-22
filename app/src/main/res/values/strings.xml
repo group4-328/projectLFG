@@ -8,4 +8,13 @@
     <string name="find_new_event">Find New Event</string>
     <string name="profile_settings">User Profile Settings</string>
     <string name="view_contacts">Contacts</string>
+
+    <!-- For the gps create event dialog -->
+    <string name="event_name">Event Name</string>
+    <string name="event_name_hint">Enter a name for the event</string>
+    <string name="date_time">Date and Time</string>
+    <string name="location">Location</string>
+    <string name="location_hint">Enter an address</string>
+    <string name="information">Information</string>
+    <string name="information_hint">Enter event description</string>
 </resources>
