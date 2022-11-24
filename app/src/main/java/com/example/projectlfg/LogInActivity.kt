@@ -17,7 +17,7 @@ class LogInActivity : AppCompatActivity() {
         passwordTextEdit = view.findViewById(R.id.passwordtextview);
 
         emailTextEdit.setOnClickListener {
-
+            
         }
         passwordTextEdit.setOnClickListener {
 
