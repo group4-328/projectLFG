@@ -71,6 +71,7 @@
         <Button
             android:layout_width="200dp"
             android:text="Login"
+            android:id="@+id/LoginButton"
             android:layout_height="match_parent">
         </Button>
     </LinearLayout>
@@ -83,6 +84,7 @@
         <Button
             android:layout_width="200dp"
             android:text="Register"
+            android:id="@+id/RegisterButton"
             android:layout_height="match_parent">
         </Button>
     </LinearLayout>

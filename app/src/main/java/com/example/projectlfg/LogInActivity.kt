@@ -2,11 +2,17 @@ package com.example.projectlfg
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class LogInActivity : AppCompatActivity() {
 
@@ -14,25 +20,51 @@ class LogInActivity : AppCompatActivity() {
     private lateinit var emailTextEdit:EditText;
     private lateinit var passwordTextEdit:EditText;
 
+    private lateinit var LoginButton: Button;
+    private lateinit var Registerbutton:Button;
+
+    //authentication
     private lateinit var authenticator: FirebaseAuth
+
+    //database
+    private lateinit var database:FirebaseDatabase;
+
+    //ref
+    private lateinit var myref : DatabaseReference;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
         view = layoutInflater.inflate(R.layout.activity_log_in,null);
-        //emailTextEdit = view.findViewById(R.id.emailtextview)
-        //passwordTextEdit = view.findViewById(R.id.passwordtextview);
+        emailTextEdit = view.findViewById(R.id.emailtextview)
+        passwordTextEdit = view.findViewById(R.id.passwordtextview);
 
-        emailTextEdit.setOnClickListener {
 
+        database  = Firebase.database;
+        myref = database.reference;
+
+
+        LoginButton.setOnClickListener {
+            if(TextUtils.isEmpty(emailTextEdit.text.toString()) || TextUtils.isEmpty(passwordTextEdit.text.toString())){
+
+            }
         }
-        passwordTextEdit.setOnClickListener {
 
+        Registerbutton.setOnClickListener {
+            if(TextUtils.isEmpty(emailTextEdit.text.toString()) || TextUtils.isEmpty(passwordTextEdit.text.toString())){
+                signUp("tmp",emailTextEdit.text.toString(),passwordTextEdit.text.toString())
+            }
         }
     }
 
     private fun logIn(email: String, password: String){
+        authenticator.signInWithEmailAndPassword(email,password).addOnCompleteListener (this){
+            if(it.isSuccessful){
+                
+            }else{
 
+            }
+        }
     }
 
     private fun signUp(name: String, email: String, password: String){
@@ -43,7 +75,9 @@ class LogInActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success
 
-                    
+                    val user = authenticator.currentUser;
+                    val userinfo = UserInformation(name=name,email=email);
+                    myref.child("users").child(user!!.uid).setValue(userinfo);
 
                 } else {
                     // If sign in fails
