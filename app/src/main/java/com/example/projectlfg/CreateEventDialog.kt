@@ -1,20 +1,35 @@
 package com.example.projectlfg
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.app.DatePickerDialog.OnDateSetListener
 import android.app.Dialog
+import android.app.TimePickerDialog
+import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.DialogInterface
+import android.icu.util.Calendar
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.TimePicker
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.google.android.gms.maps.model.LatLng
+import java.util.*
 
-class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener {
+class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDateSetListener, OnTimeSetListener {
 
-    private val dialogTitleKey = "DialogTitle"
-    private val dialogKey = "Dialog"
+    companion object {
+        val latLngKey = "lat_lng_key"
+        val dialogTitleKey = "DialogTitle"
+        val dialogKey = "Dialog"
+    }
 
     private lateinit var nameEditText: EditText
     private lateinit var dateText: TextView
@@ -22,20 +37,64 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener {
     private lateinit var locationEditText: EditText
     private lateinit var informationEditText: EditText
 
+    private var address: Address? = null
+
+    private var latLng: LatLng? = null
+    private val calendar = Calendar.getInstance()
+
+    private var year = 0
+    private var month = 0
+    private var day = 0
+    private var hour = 0
+    private var min = 0
+    private var sec = 0
+
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         lateinit var dialog: Dialog
         lateinit var view: View
 
         // build dialog
         var dialogTitle = arguments?.getString(dialogTitleKey)
+        latLng = arguments?.getParcelable(latLngKey)
         if (dialogTitle == null) { dialogTitle = "Create New Event" }
         val builder = AlertDialog.Builder(requireActivity())
 
         view = requireActivity().layoutInflater.inflate(R.layout.dialog_create_event, null)
         initUIElements(view)
+        onDateSet(
+            null,
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        onTimeSet(
+            null,
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE)
+        )
+
+        dateText.setOnClickListener(View.OnClickListener {
+            val datePickerDialog = DatePickerDialog(
+                requireActivity(), this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.show()
+        })
+        timeText.setOnClickListener(View.OnClickListener {
+            val timePickerDialog = TimePickerDialog(
+                requireActivity(), this,
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                false
+            )
+            timePickerDialog.show()
+        })
 
         // handle inputs
-
+        setAddressText()
 
         builder.setView(view)
         builder.setTitle(dialogTitle)
@@ -58,12 +117,78 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener {
         // If ok, need to save info into database
         if (which == Dialog.BUTTON_POSITIVE) {
             // gather all enter information and save
+            if (nameEditText.text.toString() == "" || locationEditText.text.toString() == "") {
 
+            }
+            else {
+                // save to database here
+                var string = ""
+                string += "Debug: Name=${nameEditText.text}\nLat=${latLng?.latitude} Lng=${latLng?.longitude}\n"
+                string += "Address="
+                for (i in 0..address?.maxAddressLineIndex!!) {
+                    string += address?.getAddressLine(i)
+                }
+                string += "\nDate=$day/$month/$year Time=$hour:$min:00\n"
+                if (informationEditText.text != null) {
+                    string += "Info: ${informationEditText.text}"
+                }
+                println(string)
+            }
             dismiss()
         }
         // If cancel, just dismiss the dialog
         else {
             dismiss()
         }
+    }
+
+    fun setAddressText() {
+        if (latLng != null) {
+            address = getAddressFromLatLng(latLng!!)
+            var addressString = ""
+            for (i in 0 .. address!!.maxAddressLineIndex) {
+                addressString += address?.getAddressLine(i)
+            }
+            locationEditText.setText(addressString)
+        }
+    }
+
+    fun getAddressFromLatLng(latLng: LatLng): Address? {
+        val geocoder = Geocoder(requireActivity(), Locale.getDefault())
+        val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+        val address = addresses?.get(0)
+        return address
+    }
+
+    fun getLatLngFromAddress(addressString: String): LatLng? {
+        val geocoder = Geocoder(requireActivity(), Locale.getDefault())
+        val addresses = geocoder.getFromLocationName(addressString, 1)
+        val address = addresses?.get(0)
+        if (address != null) {
+            val lat = address.latitude
+            val lng = address.longitude
+            val latLng = LatLng(lat, lng)
+            return latLng
+        }
+        return null
+    }
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        this.year = year
+        this.month = month + 1
+        this.day = dayOfMonth
+        dateText.setText("${this.day}/${this.month}/${this.year}")
+    }
+
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        this.hour = hourOfDay
+        this.min = minute
+        var hr = ""
+        if (this.hour < 10) { hr += "0" }
+        hr += this.hour
+        var min = ""
+        if (this.min < 10) { min += "0" }
+        min += this.min
+        timeText.setText("${hr}:${min}:00")
     }
 }
