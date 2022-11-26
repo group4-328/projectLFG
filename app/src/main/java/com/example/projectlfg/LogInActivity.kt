@@ -37,6 +37,7 @@ class LogInActivity : AppCompatActivity() {
         setContentView(R.layout.activity_log_in)
 
         // initializing views
+        println("updated..")
         view = layoutInflater.inflate(R.layout.activity_log_in,null);
         emailTextEdit = view.findViewById(R.id.emailtextview)
         passwordTextEdit = view.findViewById(R.id.passwordtextview);
@@ -55,6 +56,7 @@ class LogInActivity : AppCompatActivity() {
 
         registerButton.setOnClickListener {
             if(TextUtils.isEmpty(emailTextEdit.text.toString()) || TextUtils.isEmpty(passwordTextEdit.text.toString())){
+                println("signing up")
                 signUp("tmp",emailTextEdit.text.toString(),passwordTextEdit.text.toString())
             }
         }
