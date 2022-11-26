@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.View.OnLongClickListener
+import android.widget.Button
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -22,6 +23,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     companion object {
         val latLngKey = "lat_lng_key"
     }
+
+    private lateinit var createEventButton: Button
 
     // Set location variables to use if a event address/latlng not given
     private lateinit var locationManager: LocationManager
@@ -42,6 +45,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        createEventButton = findViewById(R.id.create_event_map_button)
     }
 
     /**
@@ -60,6 +64,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         }
 
         mMap.setOnMapLongClickListener(this)
+
+        createEventButton.setOnClickListener(View.OnClickListener {
+            var createEventDialog = CreateEventDialog()
+            createEventDialog.show(supportFragmentManager, "createEvent")
+        })
     }
 
     fun initLocationManager() {
@@ -85,7 +94,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         val lng = location.longitude
         val latlng = LatLng(lat, lng)
 
-        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latlng, 10f)
+        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latlng, 13f)
         mMap.animateCamera(cameraUpdate)
     }
 

@@ -17,4 +17,6 @@
     <string name="location_hint">Enter an address</string>
     <string name="information">Information</string>
     <string name="information_hint">Enter event description</string>
+
+    <string name="create_event">create new event</string>
 </resources>

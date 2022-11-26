@@ -125,16 +125,25 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
                 var string = ""
                 string += "Debug: Name=${nameEditText.text}\nLat=${latLng?.latitude} Lng=${latLng?.longitude}\n"
                 string += "Address="
-                for (i in 0..address?.maxAddressLineIndex!!) {
-                    string += address?.getAddressLine(i)
+                if (latLng == null) {
+                    latLng = getLatLngFromAddress(locationEditText.text.toString())
+                }
+                if (latLng != null) {
+                    address = getAddressFromLatLng(latLng!!)
+                    for (i in 0..address?.maxAddressLineIndex!!) {
+                        string += address?.getAddressLine(i)
+                    }
                 }
                 string += "\nDate=$day/$month/$year Time=$hour:$min:00\n"
                 if (informationEditText.text != null) {
                     string += "Info: ${informationEditText.text}"
                 }
+
+                println("Debug: latlng from address: lat=${latLng?.latitude}lng=${latLng?.longitude}")
                 println(string)
+                dismiss()
             }
-            dismiss()
+
         }
         // If cancel, just dismiss the dialog
         else {
