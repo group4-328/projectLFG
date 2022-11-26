@@ -3,14 +3,96 @@ package com.example.projectlfg
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var view: View;
+    private lateinit var emailTextEdit: EditText;
+    private lateinit var passwordTextEdit: EditText;
+
+    private lateinit var loginButton: Button;
+    private lateinit var registerButton: Button;
+
+    //authentication
+    private lateinit var authenticator: FirebaseAuth
+
+    //database
+    private lateinit var database: FirebaseDatabase;
+
+    //ref
+    private lateinit var myref : DatabaseReference;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // testing out sign up (to be removed)
-        val intent = Intent(this, LogInActivity::class.java)
-        startActivity(intent)
+        // get view
+        emailTextEdit = findViewById(R.id.emailtextview)
+        passwordTextEdit = findViewById(R.id.passwordtextview);
+        loginButton = findViewById(R.id.LoginButton)
+        registerButton = findViewById(R.id.RegisterButton)
+
+        authenticator = FirebaseAuth.getInstance()
+
+        database  = Firebase.database;
+        myref = database.reference;
+
+
+        loginButton.setOnClickListener {
+            if(TextUtils.isEmpty(emailTextEdit.text.toString()) || TextUtils.isEmpty(passwordTextEdit.text.toString())){
+
+            }
+        }
+
+        registerButton.setOnClickListener {
+            if(!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(passwordTextEdit.text.toString())){
+                println("signing up")
+                signUp("tmp",emailTextEdit.text.toString(),passwordTextEdit.text.toString())
+            }else{
+                println("put in information please")
+            }
+        }
+    }
+
+    private fun logIn(email: String, password: String){
+        authenticator.signInWithEmailAndPassword(email,password).addOnCompleteListener (this){
+            if(it.isSuccessful){
+
+            }else{
+
+            }
+        }
+    }
+
+
+    private fun signUp(name: String, email: String, password: String){
+
+        // Pre-config firebase signup method
+        authenticator.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success
+
+                    val user = authenticator.currentUser;
+                    val userinfo = UserInformation(name=name,email=email);
+                    myref.child("users").child(user!!.uid).setValue(userinfo);
+
+                    println("sign up success!")
+
+                } else {
+                    // If sign in fails
+
+                    println("sign up fail...")
+                }
+            }
     }
 }
