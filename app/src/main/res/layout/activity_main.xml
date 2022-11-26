@@ -5,9 +5,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    android:paddingTop="200dp"
-
+    android:paddingTop="10dp"
+    android:orientation="vertical"
     tools:context=".LogInActivity">
+
+    <ImageView
+        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:id="@+id/mainMenuLogo">
+    </ImageView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:id="@+id/layout0"
+        android:layout_below="@id/mainMenuLogo"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:text="Name"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:layout_height="50dp">
+        </TextView>
+        <EditText
+            android:paddingLeft="5dp"
+            android:layout_width="match_parent"
+            android:id="@+id/nametextview"
+            android:background="@drawable/rectanglebox"
+            android:layout_height="35dp">
+        </EditText>
+    </LinearLayout>
 
 
     <LinearLayout
@@ -16,6 +50,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:id="@+id/layout1"
+        android:layout_below="@id/layout0"
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="match_parent"
@@ -27,6 +62,7 @@
             android:layout_height="50dp">
         </TextView>
         <EditText
+            android:paddingLeft="5dp"
             android:layout_width="match_parent"
             android:id="@+id/emailtextview"
             android:background="@drawable/rectanglebox"
@@ -53,11 +89,11 @@
             android:layout_height="50dp">
         </TextView>
         <EditText
+            android:paddingLeft="5dp"
             android:layout_width="match_parent"
             android:background="@drawable/rectanglebox"
             android:id="@+id/passwordtextview"
             android:layout_height="35dp">
-
         </EditText>
     </LinearLayout>
 
