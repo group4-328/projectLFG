@@ -9,7 +9,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // testing out sign up
+        // testing out sign up (to be removed)
         val intent = Intent(this, LogInActivity::class.java)
         startActivity(intent)
     }
