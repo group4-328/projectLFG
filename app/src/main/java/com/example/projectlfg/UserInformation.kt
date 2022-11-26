@@ -4,6 +4,6 @@ data class UserInformation(
 
     var name:String = "",
     var email:String = "",
-
+    var imageuri:String=""
 
 )
