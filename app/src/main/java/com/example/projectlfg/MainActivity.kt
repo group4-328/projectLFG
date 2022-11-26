@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var emailTextEdit: EditText
     private lateinit var passwordTextEdit: EditText
     private lateinit var nameLayout: View
+    private lateinit var nameTextEdit: EditText
     private lateinit var logoView: ImageView
 
     private lateinit var loginButton: Button
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         loginButton = findViewById(R.id.LoginButton)
         registerButton = findViewById(R.id.RegisterButton)
         nameLayout = findViewById(R.id.layout0)
+        nameTextEdit = findViewById(R.id.nametextview)
 
         // firebase init
         authenticator = FirebaseAuth.getInstance()
@@ -56,10 +58,11 @@ class MainActivity : AppCompatActivity() {
         logoView.setImageResource(R.drawable.logo)
         nameLayout.visibility = View.GONE
 
-
         loginButton.setOnClickListener {
             if(!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(passwordTextEdit.text.toString())){
-
+                logIn(emailTextEdit.text.toString(), passwordTextEdit.text.toString())
+            }else{
+                popUp("please fill in the information")
             }
         }
 
@@ -68,14 +71,13 @@ class MainActivity : AppCompatActivity() {
                 if (!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(passwordTextEdit.text.toString()
                     )
                 ) {
-                    println("signing up")
-                    signUp("tmp", emailTextEdit.text.toString(), passwordTextEdit.text.toString())
+                    signUp(nameTextEdit.toString(), emailTextEdit.text.toString(), passwordTextEdit.text.toString())
                 } else {
-                    Toast.makeText(this, "not enough information!", Toast.LENGTH_SHORT).show()
+                    popUp("not enough information")
                 }
             }else{
                 nameLayout.visibility = View.VISIBLE
-                Toast.makeText(this, "Please fill out your name", Toast.LENGTH_SHORT).show()
+                popUp("Please fill out your name")
             }
         }
     }
@@ -83,32 +85,38 @@ class MainActivity : AppCompatActivity() {
     private fun logIn(email: String, password: String){
         authenticator.signInWithEmailAndPassword(email,password).addOnCompleteListener (this){
             if(it.isSuccessful){
-
+                // load main menu
+                val startMenu = Intent(this,MainMenuActivity::class.java)
+                startActivity(startMenu)
             }else{
-
+                popUp("sign up fail, please try again")
             }
         }
     }
 
 
     private fun signUp(name: String, email: String, password: String){
-
         // Pre-config firebase signup method
         authenticator.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success
 
+                    // to be edit
                     val user = authenticator.currentUser;
-                    val userinfo = UserInformation(name=name,email=email);
-                    myref.child("users").child(user!!.uid).setValue(userinfo);
+                    val userinfo = UserInformation(name=name,email=email)
+                    myref.child("users").child(user!!.uid).setValue(userinfo)
 
 
+                    logIn(email, password)
                 } else {
                     // If sign in fails
-
-                    Toast.makeText(this, "sign up fail, please try again", Toast.LENGTH_SHORT).show()
+                    popUp("sign up fail, please try again")
                 }
             }
+    }
+
+    private fun popUp(text: String){
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 }
