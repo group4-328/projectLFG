@@ -8,6 +8,7 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.*
 import com.example.projectlfg.Util.popUp
+import com.example.projectlfg.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -25,6 +26,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loginButton: Button
     private lateinit var registerButton: TextView
 
+    private lateinit var binding: ActivityMainBinding
+
     //authentication
     private lateinit var authenticator: FirebaseAuth
 
@@ -36,15 +39,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
 
         // get view
-        emailTextEdit = findViewById(R.id.emailtextview)
-        passwordTextEdit = findViewById(R.id.passwordtextview);
-        loginButton = findViewById(R.id.LoginButton)
-        registerButton = findViewById(R.id.registerlink)
-        nameLayout = findViewById(R.id.layout0)
-        nameTextEdit = findViewById(R.id.nametextview)
+        emailTextEdit = binding.emailtextview
+        passwordTextEdit = binding.passwordtextview
+        loginButton = binding.LoginButton
+        registerButton = binding.registerlink
+        nameLayout = binding.layout0
+        nameTextEdit = binding.nametextview
+
 
         // firebase init
         authenticator = FirebaseAuth.getInstance()
@@ -60,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             if(!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(passwordTextEdit.text.toString())){
                 logIn(emailTextEdit.text.toString(), passwordTextEdit.text.toString())
             }else{
-                popUp(this, "please fill in the information")
+                popUp(this, "please fill in user information")
             }
         }
 

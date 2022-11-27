@@ -33,9 +33,8 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
     }
 
     override fun onClick(v: View?) {
-        popUp(this, "click " + v.toString())
         if(v == contactListImageButton){
-            popUp(this, "implement")
+
         }
     }
 

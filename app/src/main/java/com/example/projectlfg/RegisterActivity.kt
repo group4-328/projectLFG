@@ -85,6 +85,8 @@ class RegisterActivity : AppCompatActivity() {
 
             if(!NameNotEmpty && !EmailNotEmpty && !PasswordNotEmpty){
                 signUp(NameEditText.text.toString(),EmailEditText.text.toString(),PasswordEditText.text.toString())
+            }else{
+                popUp(this, "please fill in user information")
             }
         }
     }
@@ -116,6 +118,8 @@ class RegisterActivity : AppCompatActivity() {
                             val userinfo = UserInformation(name=name,email=email,imageuri=downloadUri.toString());
                             myref.child("users").child(user!!.uid).setValue(userinfo);
                             Toast.makeText(this,"You've Signed Up Successfully", Toast.LENGTH_LONG).show();
+                        }else{
+                            popUp(this, "sign up fails..")
                         }
                     }.addOnFailureListener {
                         Toast.makeText(this,it.localizedMessage, Toast.LENGTH_LONG).show()
@@ -124,7 +128,6 @@ class RegisterActivity : AppCompatActivity() {
 
                 } else {
                     // If sign up fails
-                    popUp(this, "sign up fails..")
                 }
             }.addOnFailureListener {
                 Toast.makeText(this,it.localizedMessage, Toast.LENGTH_LONG).show()
