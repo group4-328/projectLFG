@@ -6,10 +6,7 @@ import android.os.Bundle
 import android.text.Layout
 import android.text.TextUtils
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -25,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var logoView: ImageView
 
     private lateinit var loginButton: Button
-    private lateinit var registerButton: Button
+    private lateinit var registerButton: TextView
 
     //authentication
     private lateinit var authenticator: FirebaseAuth
@@ -44,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         emailTextEdit = findViewById(R.id.emailtextview)
         passwordTextEdit = findViewById(R.id.passwordtextview);
         loginButton = findViewById(R.id.LoginButton)
-        registerButton = findViewById(R.id.RegisterButton)
+        registerButton = findViewById(R.id.registerlink)
         nameLayout = findViewById(R.id.layout0)
         nameTextEdit = findViewById(R.id.nametextview)
 
@@ -67,18 +64,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         registerButton.setOnClickListener {
-            if(nameLayout.visibility != View.GONE) {
-                if (!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(passwordTextEdit.text.toString()
-                    )
-                ) {
-                    signUp(nameTextEdit.toString(), emailTextEdit.text.toString(), passwordTextEdit.text.toString())
-                } else {
-                    popUp("not enough information")
-                }
-            }else{
-                nameLayout.visibility = View.VISIBLE
-                popUp("Please fill out your name")
-            }
+            // Open register activity
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -95,6 +83,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    /*
     private fun signUp(name: String, email: String, password: String){
         // Pre-config firebase signup method
         authenticator.createUserWithEmailAndPassword(email, password)
@@ -103,10 +92,6 @@ class MainActivity : AppCompatActivity() {
                     // Sign in success
 
                     // to be edit
-                    val user = authenticator.currentUser;
-                    val userinfo = UserInformation(name=name,email=email)
-                    myref.child("users").child(user!!.uid).setValue(userinfo)
-
 
                     logIn(email, password)
                 } else {
@@ -115,6 +100,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
     }
+    *
+     */
 
     private fun popUp(text: String){
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
