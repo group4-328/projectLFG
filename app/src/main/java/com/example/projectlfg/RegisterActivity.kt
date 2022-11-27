@@ -6,7 +6,7 @@ import android.os.Bundle
 class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Unknown file name conflict with 'activity_register' possibily due to git
+        // Unknown file name conflict with 'activity_register' possibly due to git
         setContentView(R.layout.activity_register2)
     }
 

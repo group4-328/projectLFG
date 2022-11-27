@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import com.example.projectlfg.Util.popUp
 
 class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
 
@@ -19,27 +20,24 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
 
         // init image view
         findActivityImageButton         = findViewById(R.id.findActivityImageButton)
-        findActivityImageButton.setImageResource(R.drawable.activity)
         findActivityImageButton.setOnClickListener(this)
 
         scheduledActivityImageButton    = findViewById(R.id.scheduleActivityImageButton)
-        scheduledActivityImageButton.setImageResource(R.drawable.schedule)
         scheduledActivityImageButton.setOnClickListener(this)
 
         contactListImageButton          = findViewById(R.id.contactListImageButton)
-        contactListImageButton.setImageResource(R.drawable.contact)
         contactListImageButton.setOnClickListener(this)
 
         configImageButton               = findViewById(R.id.configImageButton)
-        configImageButton.setImageResource(R.drawable.setting)
         configImageButton.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
-        popUp("click " + v.toString())
+        popUp(this, "click " + v.toString())
+        if(v == contactListImageButton){
+            popUp(this, "implement")
+        }
     }
 
-    private fun popUp(text: String){
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-    }
+
 }

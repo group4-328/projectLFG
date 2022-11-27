@@ -7,6 +7,7 @@ import android.text.Layout
 import android.text.TextUtils
 import android.view.View
 import android.widget.*
+import com.example.projectlfg.Util.popUp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -59,7 +60,7 @@ class MainActivity : AppCompatActivity() {
             if(!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(passwordTextEdit.text.toString())){
                 logIn(emailTextEdit.text.toString(), passwordTextEdit.text.toString())
             }else{
-                popUp("please fill in the information")
+                popUp(this, "please fill in the information")
             }
         }
 
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 val startMenu = Intent(this,MainMenuActivity::class.java)
                 startActivity(startMenu)
             }else{
-                popUp("sign up fail, please try again")
+                popUp(this, "sign up fail, please try again")
             }
         }
     }
@@ -103,7 +104,4 @@ class MainActivity : AppCompatActivity() {
     *
      */
 
-    private fun popUp(text: String){
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-    }
 }

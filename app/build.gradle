@@ -11,7 +11,6 @@ plugins {
 
 android {
     compileSdk 33
-
     defaultConfig {
         applicationId "com.example.projectlfg"
         minSdk 26
@@ -21,7 +20,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             minifyEnabled false
