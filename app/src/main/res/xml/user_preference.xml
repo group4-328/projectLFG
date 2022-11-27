@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="About"
+        >
+
+        <Preference
+            android:title="User Information"
+            android:summary="User Profile"
+            >
+        </Preference>
+
+        <CheckBoxPreference
+            android:title="Privacy Settings"
+            android:key="checkboxpreference"
+            android:summary="Posting your records anonymously"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Events"
+        >
+
+        <Preference
+            android:title="History"
+            android:summary="Events Attended"
+            >
+        </Preference>
+
+        <Preference
+            android:title="Saved"
+            android:summary="Saved Events"
+            >
+        </Preference>
+
+        <Preference
+            android:title="Add Event"
+            android:summary="Set up a meet up"
+            >
+        </Preference>
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
