@@ -3,6 +3,7 @@ package com.example.projectlfg
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.TextUtils
@@ -10,10 +11,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import com.example.projectlfg.Util.popUp
 import com.example.projectlfg.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -24,28 +24,26 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.util.*
 
-class RegisterActivity:AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityRegisterBinding
 
 
-    private lateinit var NameEditText:EditText;
-    private lateinit var EmailEditText:EditText;
-    private lateinit var PasswordEditText:EditText;
+    private lateinit var NameEditText: EditText;
+    private lateinit var EmailEditText: EditText;
+    private lateinit var PasswordEditText: EditText;
     private lateinit var RegisterButton: Button;
     private lateinit var UserImageView : ImageView;
 
-    private lateinit var authenticator:FirebaseAuth;
+    private lateinit var authenticator: FirebaseAuth;
     private lateinit var myref : DatabaseReference;
-    private lateinit var storage:FirebaseStorage;
+    private lateinit var storage: FirebaseStorage;
     private lateinit var storageRef : StorageReference
-    companion object{
-        val PICK_IMAGE = 100;
-    }
 
     private var imageUri: Uri?=null;
-    private lateinit var ImageGalleryIntent :ActivityResultLauncher<Intent>
+    private lateinit var ImageGalleryIntent : ActivityResultLauncher<Intent>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +67,7 @@ class RegisterActivity:AppCompatActivity() {
 
 
         UserImageView.setOnClickListener {
-            val gallery = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             ImageGalleryIntent.launch(gallery);
         }
 
@@ -87,6 +85,8 @@ class RegisterActivity:AppCompatActivity() {
 
             if(!NameNotEmpty && !EmailNotEmpty && !PasswordNotEmpty){
                 signUp(NameEditText.text.toString(),EmailEditText.text.toString(),PasswordEditText.text.toString())
+            }else{
+                popUp(this, "please fill in user information")
             }
         }
     }
@@ -118,6 +118,8 @@ class RegisterActivity:AppCompatActivity() {
                             val userinfo = UserInformation(name=name,email=email,imageuri=downloadUri.toString());
                             myref.child("users").child(user!!.uid).setValue(userinfo);
                             Toast.makeText(this,"You've Signed Up Successfully", Toast.LENGTH_LONG).show();
+                        }else{
+                            popUp(this, "sign up fails..")
                         }
                     }.addOnFailureListener {
                         Toast.makeText(this,it.localizedMessage, Toast.LENGTH_LONG).show()
@@ -125,11 +127,14 @@ class RegisterActivity:AppCompatActivity() {
 
 
                 } else {
-                    // If sign in fails
-
+                    // If sign up fails
                 }
             }.addOnFailureListener {
                 Toast.makeText(this,it.localizedMessage, Toast.LENGTH_LONG).show()
             }
+    }
+
+    companion object{
+        val PICK_IMAGE = 100;
     }
 }
