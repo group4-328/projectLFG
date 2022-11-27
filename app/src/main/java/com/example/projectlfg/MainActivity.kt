@@ -78,30 +78,9 @@ class MainActivity : AppCompatActivity() {
                 val startMenu = Intent(this,MainMenuActivity::class.java)
                 startActivity(startMenu)
             }else{
-                popUp(this, "sign up fail, please try again")
+                popUp(this, "log in fail, please try again")
             }
         }
     }
-
-
-    /*
-    private fun signUp(name: String, email: String, password: String){
-        // Pre-config firebase signup method
-        authenticator.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success
-
-                    // to be edit
-
-                    logIn(email, password)
-                } else {
-                    // If sign in fails
-                    popUp("sign up fail, please try again")
-                }
-            }
-    }
-    *
-     */
 
 }
