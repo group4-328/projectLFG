@@ -64,7 +64,7 @@
         android:background="@drawable/rectanglebox"
         android:maxLines="1"
         android:paddingLeft = "10dp"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
         android:id="@+id/RegisterEmail"
         android:layout_height="35dp">
     </EditText>

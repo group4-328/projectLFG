@@ -28,17 +28,7 @@
             >
         </Preference>
 
-        <Preference
-            android:title="Saved"
-            android:summary="Saved Events"
-            >
-        </Preference>
 
-        <Preference
-            android:title="Add Event"
-            android:summary="Set up a meet up"
-            >
-        </Preference>
 
     </PreferenceCategory>
 

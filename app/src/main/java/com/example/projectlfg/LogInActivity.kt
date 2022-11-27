@@ -79,7 +79,8 @@ class LogInActivity : AppCompatActivity() {
     private fun logIn(email: String, password: String){
         authenticator.signInWithEmailAndPassword(email,password).addOnCompleteListener (this){
             if(it.isSuccessful){
-
+                val intent = Intent(this,MainMenuActivity::class.java)
+                startActivity((intent))
             }else{
 
             }
