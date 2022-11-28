@@ -1,5 +1,6 @@
 package com.example.projectlfg
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -35,6 +36,12 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
     override fun onClick(v: View?) {
         if(v == contactListImageButton){
 
+        }else if(v==configImageButton){
+
+//            val intent = Intent(this,UserInfoFragment::class)
+//            startActivity(intent);
+            this.supportFragmentManager.beginTransaction().replace(R.id.mainmenulayout,SettingPreferenceFragment())
+                .addToBackStack(null).commit();
         }
     }
 

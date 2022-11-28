@@ -48,7 +48,7 @@ android {
 }
 
 dependencies {
-
+    implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
@@ -84,5 +84,8 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
+    implementation 'com.google.firebase:firebase-database-ktx'
+
+    implementation 'com.google.firebase:firebase-storage-ktx'
     // TODO: Add the dependencies for Firebase products you want to use
 }

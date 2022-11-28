@@ -45,6 +45,7 @@
         android:maxLines="1"
         android:paddingLeft = "10dp"
         android:inputType="text"
+        android:textColor="@color/black"
         android:id="@+id/RegisterName"
         android:layout_height="35dp">
     </EditText>
@@ -64,7 +65,8 @@
         android:background="@drawable/rectanglebox"
         android:maxLines="1"
         android:paddingLeft = "10dp"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/black"
         android:id="@+id/RegisterEmail"
         android:layout_height="35dp">
     </EditText>
@@ -85,6 +87,7 @@
         android:maxLines="1"
         android:paddingLeft = "10dp"
         android:inputType="textPassword"
+        android:textColor="@color/black"
         android:id="@+id/RegisterPassword"
         android:layout_height="35dp">
     </EditText>
