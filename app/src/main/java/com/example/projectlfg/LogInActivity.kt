@@ -1,5 +1,6 @@
 package com.example.projectlfg
 
+import EventsInformation
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -65,8 +66,8 @@ class LogInActivity : AppCompatActivity() {
 
 
         LoginButton.setOnClickListener {
-            if(TextUtils.isEmpty(emailTextEdit.text.toString()) || TextUtils.isEmpty(passwordTextEdit.text.toString())){
-
+            if(!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(passwordTextEdit.text.toString())){
+                logIn(emailTextEdit.text.toString(),passwordTextEdit.text.toString())
             }
         }
 
@@ -79,7 +80,8 @@ class LogInActivity : AppCompatActivity() {
     private fun logIn(email: String, password: String){
         authenticator.signInWithEmailAndPassword(email,password).addOnCompleteListener (this){
             if(it.isSuccessful){
-                val intent = Intent(this,MainMenuActivity::class.java)
+//                val intent = Intent(this,MainMenuActivity::class.java)
+                val intent = Intent(this,EventInfoActivity::class.java);
                 startActivity((intent))
             }else{
 

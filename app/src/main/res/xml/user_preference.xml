@@ -7,6 +7,7 @@
         <Preference
             android:title="User Information"
             android:summary="User Profile"
+            android:key="UserInfo"
             >
         </Preference>
 
@@ -25,6 +26,7 @@
         <Preference
             android:title="History"
             android:summary="Events Attended"
+            android:key="HistoryInfo"
             >
         </Preference>
 
