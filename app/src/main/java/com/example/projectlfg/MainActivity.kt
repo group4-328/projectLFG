@@ -3,9 +3,7 @@ package com.example.projectlfg
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Layout
 import android.text.TextUtils
-import android.view.View
 import android.widget.*
 import com.example.projectlfg.Util.popUp
 import com.example.projectlfg.databinding.ActivityMainBinding
@@ -19,8 +17,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var emailTextEdit: EditText
     private lateinit var passwordTextEdit: EditText
-    private lateinit var nameLayout: View
-    private lateinit var nameTextEdit: EditText
     private lateinit var logoView: ImageView
 
     private lateinit var loginButton: Button
@@ -28,14 +24,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    //authentication
-    private lateinit var authenticator: FirebaseAuth
-
-    //database
-    private lateinit var database: FirebaseDatabase
-
-    //ref
-    private lateinit var myref : DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,11 +37,8 @@ class MainActivity : AppCompatActivity() {
         passwordTextEdit = binding.passwordtextview
         loginButton = binding.LoginButton
         registerButton = binding.registerlink
-        nameLayout = binding.layout0
-        nameTextEdit = binding.nametextview
 
-
-        // firebase init
+        // firebase init ()
         authenticator = FirebaseAuth.getInstance()
         database  = Firebase.database;
         myref = database.reference;
@@ -61,7 +46,6 @@ class MainActivity : AppCompatActivity() {
         // UI init
         logoView = findViewById(R.id.mainMenuLogo)
         logoView.setImageResource(R.drawable.logo)
-        nameLayout.visibility = View.GONE
 
         loginButton.setOnClickListener {
             if(!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(passwordTextEdit.text.toString())){
@@ -82,12 +66,38 @@ class MainActivity : AppCompatActivity() {
         authenticator.signInWithEmailAndPassword(email,password).addOnCompleteListener (this){
             if(it.isSuccessful){
                 // load main menu
+
+                // set currentUser information
+                myref.child("users").child(authenticator.currentUser!!.uid).get().addOnSuccessListener {
+                    currentUser = UserInformation(it.child("name").value.toString(), it.child("email").value.toString(), it.child("uid").value.toString())
+                    println(authenticator.currentUser!!.uid)
+                    println(currentUser!!.name)
+                    println(currentUser!!.email)
+                }.addOnFailureListener {
+
+                }
+
+
                 val startMenu = Intent(this,MainMenuActivity::class.java)
                 startActivity(startMenu)
             }else{
                 popUp(this, "log in fail, please try again")
             }
         }
+    }
+
+    companion object{
+
+        //authentication
+        lateinit var authenticator: FirebaseAuth
+
+        //database
+        lateinit var database: FirebaseDatabase
+
+        //ref
+        lateinit var myref : DatabaseReference
+
+        var currentUser: UserInformation? = UserInformation()
     }
 
 }

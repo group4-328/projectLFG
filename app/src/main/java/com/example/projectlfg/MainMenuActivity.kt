@@ -1,11 +1,10 @@
 package com.example.projectlfg
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
-import com.example.projectlfg.Util.popUp
 
 class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
 
@@ -30,11 +29,14 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
 
         configImageButton               = findViewById(R.id.configImageButton)
         configImageButton.setOnClickListener(this)
+
     }
 
     override fun onClick(v: View?) {
-        if(v == contactListImageButton){
 
+        when(v){
+            contactListImageButton-> startActivity(Intent(this, ContactListActivity::class.java))
+            else->println("click")
         }
     }
 
