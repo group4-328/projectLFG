@@ -112,10 +112,17 @@ class RegisterActivity : AppCompatActivity() {
         authenticator.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful && imageUri != null) {
-                    // Sign in success
+                    
+                    // store user profile
                     val uniqueid = UUID.randomUUID();
                     val ref= storageRef.child("images/"+uniqueid);
                     val uploadTask = ref.putFile(imageUri!!);
+
+                    // temporary replacement
+                    val user = authenticator.currentUser;
+                    val userinfo = UserInformation(name,email,"",user!!.uid);
+                    myref.child("users").child(user!!.uid).setValue(userinfo);
+                    Toast.makeText(this,"You've Signed Up Successfully", Toast.LENGTH_LONG).show();
 
                     val urlTask = uploadTask.continueWithTask {
                         if(!task.isSuccessful){
@@ -126,14 +133,15 @@ class RegisterActivity : AppCompatActivity() {
                         ref.downloadUrl
                     }.addOnCompleteListener {
                         if(it.isSuccessful){
+                            // register user to the "user" database
+
                             val downloadUri= it.result;
                             val user = authenticator.currentUser;
-                            val userinfo = UserInformation(name=name,email=email,imageuri=downloadUri.toString());
-                            myref.child("users").child(user!!.uid).setValue(userinfo);
-                            Toast.makeText(this,"You've Signed Up Successfully", Toast.LENGTH_LONG).show();
-                        }else{
-                            popUp(this, "sign up fails..")
+                            myref.child("users").child(user!!.uid).child("imageuri").setValue(userinfo);
+
+                            finish()
                         }
+
                     }.addOnFailureListener {
                         Toast.makeText(this,it.localizedMessage, Toast.LENGTH_LONG).show()
                     }
@@ -145,6 +153,7 @@ class RegisterActivity : AppCompatActivity() {
                 } else {
                     // If sign up fails
                 }
+
             }.addOnFailureListener {
                 Toast.makeText(this,it.localizedMessage, Toast.LENGTH_LONG).show()
             }

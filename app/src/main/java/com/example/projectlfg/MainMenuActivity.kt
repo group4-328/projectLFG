@@ -29,12 +29,12 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
 
         configImageButton = findViewById(R.id.configImageButton)
         configImageButton.setOnClickListener(this)
+
     }
 
     override fun onClick(v: View?) {
-        if(v == contactListImageButton){
-
-        }else if(v==configImageButton){
+        if (v == scheduledActivityImageButton){}
+        else if(v==configImageButton){
 
 //            this.supportFragmentManager.beginTransaction().replace(R.id.mainmenulayout,SettingPreferenceFragment())
 //                .addToBackStack(null).commit();
@@ -45,6 +45,10 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
         else if (v == findActivityImageButton) {
             val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent)
+        }
+        else{
+            startActivity(Intent(this, ContactListActivity::class.java))
+            //else->println("click")
         }
     }
 
