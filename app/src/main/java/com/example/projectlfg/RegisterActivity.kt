@@ -41,6 +41,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var myref : DatabaseReference;
     private lateinit var storage: FirebaseStorage;
     private lateinit var storageRef : StorageReference
+    private lateinit var ImgClickButton: Button;
 
     private var imageUri: Uri?=null;
     private lateinit var ImageGalleryIntent : ActivityResultLauncher<Intent>
@@ -57,6 +58,12 @@ class RegisterActivity : AppCompatActivity() {
         PasswordEditText = binding.RegisterPassword
         RegisterButton = binding.RegisterButton
         UserImageView = binding.UserImageView;
+        ImgClickButton = binding.RegisterImgButton;
+
+        ImgClickButton.setOnClickListener {
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            ImageGalleryIntent.launch(gallery);
+        }
 
 
         storage = Firebase.storage;
@@ -70,12 +77,6 @@ class RegisterActivity : AppCompatActivity() {
             if(savedInstanceState.containsKey("imguri")){
                 imageUri = savedInstanceState.getString("imguri")!!.toUri();
             }
-        }
-
-
-        UserImageView.setOnClickListener {
-            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            ImageGalleryIntent.launch(gallery);
         }
 
         ImageGalleryIntent = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),{

@@ -70,21 +70,21 @@
         android:id="@+id/UserEmailInfo"
         android:editable="false"
         ></EditText>
-<!--    <TextView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="60dp"-->
-<!--        android:gravity="center_vertical"-->
-<!--        android:textSize="20sp"-->
-<!--        android:text="Password"-->
-<!--        ></TextView>-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:textSize="20sp"
+        android:text="Password"
+        ></TextView>
 
-<!--    <EditText-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:editable="false"-->
-<!--        android:id="@+id/UserPasswordInfo"-->
-<!--        android:inputType="textPassword"-->
-<!--        ></EditText>-->
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:editable="false"
+        android:id="@+id/InsertUserPasswordInfo"
+        android:inputType="textPassword"
+        ></EditText>
 
 
     <LinearLayout

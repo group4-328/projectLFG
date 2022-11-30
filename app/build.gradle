@@ -6,9 +6,9 @@ plugins {
 
     //for firebase
     // Add the Google services Gradle plugin
-    id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
-
+apply plugin: 'com.google.gms.google-services'
 android {
     compileSdk 33
     defaultConfig {

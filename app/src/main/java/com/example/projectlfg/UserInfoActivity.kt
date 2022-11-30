@@ -1,10 +1,12 @@
 package com.example.projectlfg
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -61,6 +63,7 @@ class UserInfoActivity:AppCompatActivity() {
          SaveButton = view.findViewById(R.id.SaveButton);
         SelectImgButton = view.findViewById(R.id.selectimgbutton);
         UserImgView = view.findViewById(R.id.userimgview)
+        passwordfield= view.findViewById(R.id.InsertUserPasswordInfo);
 
         if(savedInstanceState != null){
             newImageSelected = savedInstanceState.getBoolean(NEW_IMAGE_SELECTED);
@@ -111,6 +114,11 @@ class UserInfoActivity:AppCompatActivity() {
             db.child("users").child(curruser!!.uid).child("email").setValue(newEmail).addOnSuccessListener {
                 Toast.makeText(this,"Email is Saved",Toast.LENGTH_LONG)
             };
+
+            val user = FirebaseAuth.getInstance().currentUser
+            user!!.updateEmail(newEmail);
+            if(!TextUtils.isEmpty(passwordfield.text))
+                user!!.updatePassword(passwordfield.text.toString())
             if(newImageSelected){
                 val tmpid = UUID.randomUUID()
                 val storageref = FirebaseStorage.getInstance().reference.child("images/${tmpid}")
@@ -127,8 +135,7 @@ class UserInfoActivity:AppCompatActivity() {
                     }
                 }
             }
-
-
+            sharedPreferences = getSharedPreferences("sharedpref", Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit();
             editor.putString("name",newName);
             editor.putString("email",newEmail);
