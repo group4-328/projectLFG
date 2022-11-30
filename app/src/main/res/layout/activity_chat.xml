@@ -7,13 +7,36 @@
     android:background="@color/black"
     tools:context=".ChatActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/chatRoomName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10sp"
+        android:text="name holder"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/chatRoomName"
+        tools:layout_editor_absoluteX="-2dp"></View>
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRoomMsgs"
         android:layout_width="match_parent"
-        android:layout_height="650dp"
+        android:layout_height="580dp"
+        android:layout_marginBottom="7sp"
         app:layout_constraintBottom_toTopOf="@+id/chatRoomInput"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <EditText
         android:background="@drawable/rectanglebox"
@@ -23,7 +46,7 @@
         android:layout_width="300dp"
         android:layout_height="75dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></EditText>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/chatRoomSend"

@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectlfg.MainActivity.Companion.authenticator
-import com.example.projectlfg.`object`.CustomAdapter
+import com.example.projectlfg.ContactAdapter
 import com.example.projectlfg.databinding.ActivityContactListBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,7 +19,7 @@ private lateinit var binding: ActivityContactListBinding
 class ContactListActivity : AppCompatActivity() {
 
     private lateinit var contactList: ArrayList<UserInformation>
-    private lateinit var adapter: CustomAdapter
+    private lateinit var adapter: ContactAdapter
     private lateinit var databaseRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +32,7 @@ class ContactListActivity : AppCompatActivity() {
         contactList = arrayListOf()
 
 
-        adapter = CustomAdapter(this, contactList)
+        adapter = ContactAdapter(this, contactList)
         val contactView: RecyclerView = binding.userContactList
 
         contactView.layoutManager = LinearLayoutManager(this)
@@ -62,8 +62,5 @@ class ContactListActivity : AppCompatActivity() {
 
         })
 
-        contactView.setOnClickListener {
-            //open up chatroom
-        }
     }
 }
