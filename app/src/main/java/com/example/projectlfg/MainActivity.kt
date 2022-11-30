@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
                 // set currentUser information
                 myref.child("users").child(authenticator.currentUser!!.uid).get().addOnSuccessListener {
-                    currentUser = UserInformation(it.child("name").value.toString(), it.child("email").value.toString(), it.child("uid").value.toString())
+                    currentUser = UserInformation(it.child("name").value.toString(), it.child("email").value.toString(), it.child("uid").value.toString(), it.child("uid").value.toString())
                     popUp(this, "Welcome back, " + it.child("name").value.toString())
                     //println(authenticator.currentUser!!.uid)
                     //println(currentUser!!.name)

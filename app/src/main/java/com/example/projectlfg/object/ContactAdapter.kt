@@ -32,6 +32,7 @@ class ContactAdapter(val context: Context, val userList: ArrayList<UserInformati
         holder.itemView.setOnClickListener{
             val intent = Intent(context, ChatActivity::class.java)
             intent.putExtra("name", currentContact.name)
+            intent.putExtra("receiver", currentContact.uid)
             context.startActivity(intent)
         }
     }

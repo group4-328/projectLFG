@@ -58,12 +58,12 @@ class MsgAdapter(val context: Context, val msgList: ArrayList<Message>): Recycle
         // if it's a sent msg
         if(holder.javaClass == SentMsgHolder::class.java){
             val viewHolder = holder as SentMsgHolder
-            viewHolder.msg.text = currentTxt.msg
+            holder.msg.text = currentTxt.msg
 
         // if it's a receive msg
         }else{
             val viewHolder = holder as ReceiveMsgHolder
-            viewHolder.msg.text = currentTxt.msg
+            holder.msg.text = currentTxt.msg
         }
     }
 

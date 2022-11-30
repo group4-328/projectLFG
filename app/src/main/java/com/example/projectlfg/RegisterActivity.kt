@@ -107,7 +107,7 @@ class RegisterActivity : AppCompatActivity() {
 
                     // temporary replacement
                     val user = authenticator.currentUser;
-                    val userinfo = UserInformation(name,email,"");
+                    val userinfo = UserInformation(name,email,"",user!!.uid);
                     myref.child("users").child(user!!.uid).setValue(userinfo);
                     Toast.makeText(this,"You've Signed Up Successfully", Toast.LENGTH_LONG).show();
 

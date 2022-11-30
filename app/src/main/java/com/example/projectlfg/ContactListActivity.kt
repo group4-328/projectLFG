@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectlfg.MainActivity.Companion.authenticator
 import com.example.projectlfg.ContactAdapter
+import com.example.projectlfg.MainActivity.Companion.currentUser
 import com.example.projectlfg.databinding.ActivityContactListBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,6 +22,9 @@ class ContactListActivity : AppCompatActivity() {
     private lateinit var contactList: ArrayList<UserInformation>
     private lateinit var adapter: ContactAdapter
     private lateinit var databaseRef: DatabaseReference
+
+    private lateinit var senderID: String
+    private lateinit var receiverID: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,17 +45,20 @@ class ContactListActivity : AppCompatActivity() {
         databaseRef.child("users").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 contactList.clear()
-                println("adding users..")
 
                 // adding users in friend list to contact list view
                 for(users in snapshot.children){
 
-                    val name = users.child("name").value.toString()
-                    val email = users.child("email").value.toString()
+                    if(users.child("uid").value.toString() != currentUser!!.uid){
+                        val name = users.child("name").value.toString()
+                        val email = users.child("email").value.toString()
+                        val uid = users.child("uid").value.toString()
 
-                    println(name + " " + email)
+                        println(name + " " + email)
 
-                    contactList.add(UserInformation(name, email, ""))
+                        contactList.add(UserInformation(name, email, "", uid))
+                    }
+
                 }
                 adapter.notifyDataSetChanged()
             }

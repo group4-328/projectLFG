@@ -7,16 +7,16 @@ class UserInformation {
     var name: String? = ""
     var email: String? = ""
     var imageuri: String? = ""
-    var friendID: String? = ""
+    var uid: String? = ""
     var friendList: ArrayList<String>? = null
 
     constructor()
 
-    constructor(name: String, email: String, uri: String) {
+    constructor(name: String, email: String, uri: String, uid:String) {
         this.name = name
         this.email = email
         this.imageuri = uri
-        this.friendID = ""
+        this.uid = uid
     }
 
 }
