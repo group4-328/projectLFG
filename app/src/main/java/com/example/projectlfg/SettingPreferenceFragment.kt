@@ -33,6 +33,8 @@ class SettingPreferenceFragment: PreferenceFragmentCompat(), Preference.OnPrefer
 
         History.onPreferenceClickListener = object:Preference.OnPreferenceClickListener{
             override fun onPreferenceClick(preference: Preference): Boolean {
+                val intent = Intent(activity,UserHistoryActivity::class.java);
+                startActivity(intent);
                 return true;
             }
 

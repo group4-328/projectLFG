@@ -2,6 +2,7 @@ package com.example.projectlfg
 
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -20,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import java.util.*
+import kotlin.collections.HashMap
 
 class UserInfoActivity:AppCompatActivity() {
     private lateinit var binding:ActivityUserBinding;
@@ -34,8 +37,18 @@ class UserInfoActivity:AppCompatActivity() {
     private lateinit var imguri: Uri;
 
     private lateinit var galleryResult:ActivityResultLauncher<Intent>;
-
+    private lateinit var sharedPreferences: SharedPreferences;
     private lateinit var db  : DatabaseReference;
+    private  var newImageSelected = false;
+
+    companion object{
+        val NEW_IMAGE_SELECTED = "newImageSelected"
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(NEW_IMAGE_SELECTED,newImageSelected);
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +62,15 @@ class UserInfoActivity:AppCompatActivity() {
         SelectImgButton = view.findViewById(R.id.selectimgbutton);
         UserImgView = view.findViewById(R.id.userimgview)
 
+        if(savedInstanceState != null){
+            newImageSelected = savedInstanceState.getBoolean(NEW_IMAGE_SELECTED);
+        }
+
         galleryResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),{
             if(it.resultCode == Activity.RESULT_OK){
 
                    imguri = it.data!!.data as Uri;
+                newImageSelected = true;
                  UserImgView.setImageURI(imguri);
             }
         })
@@ -78,7 +96,6 @@ class UserInfoActivity:AppCompatActivity() {
                 emailfield.setText(tmp.get("email"))
 
                 val imgURL = tmp.get("imageuri")
-//                val storageref =   FirebaseStorage.getInstance().reference.child("images/")
                 Glide.with(this).load(imgURL).into(UserImgView);
             }.addOnFailureListener {
                 Log.e("firebase","error getting data")
@@ -94,7 +111,30 @@ class UserInfoActivity:AppCompatActivity() {
             db.child("users").child(curruser!!.uid).child("email").setValue(newEmail).addOnSuccessListener {
                 Toast.makeText(this,"Email is Saved",Toast.LENGTH_LONG)
             };
+            if(newImageSelected){
+                val tmpid = UUID.randomUUID()
+                val storageref = FirebaseStorage.getInstance().reference.child("images/${tmpid}")
+                storageref.putFile(imguri).continueWith {
+                    if(!it.isSuccessful){
+                        it.exception?.let{
+                            throw it
+                        }
+                    }
+                    storageref.downloadUrl
+                }.addOnCompleteListener{
+                    if(it.isSuccessful){
+                        db.child("users").child(curruser!!.uid).child("imageuri").setValue(it.result);
+                    }
+                }
+            }
+
+
+            val editor = sharedPreferences.edit();
+            editor.putString("name",newName);
+            editor.putString("email",newEmail);
+
         }
+
 
     }
 }

@@ -60,7 +60,7 @@ class EventInfoActivity:AppCompatActivity() {
             val eventname = EventName.text.toString()
             val startingdate = DateAndTime.text.toString()
             val enddate = EndDateAndTime.text.toString()
-            val attendess :Int=  Attendees.text.toString().toInt();
+            val attendess =  Attendees.text.toString().toLong();
             val locationstr = Location.text.toString();
 
             val eventinfo = EventsInformation(name=eventname,startingdate=startingdate, endtime = enddate, attendess = attendess,location=locationstr)

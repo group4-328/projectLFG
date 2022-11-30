@@ -38,6 +38,7 @@ class LogInActivity : AppCompatActivity() {
 
     //ref
     private lateinit var myref : DatabaseReference;
+    private lateinit var sharedPreferences: SharedPreferences
 
 
     companion object{
@@ -80,9 +81,9 @@ class LogInActivity : AppCompatActivity() {
     private fun logIn(email: String, password: String){
         authenticator.signInWithEmailAndPassword(email,password).addOnCompleteListener (this){
             if(it.isSuccessful){
-//                val intent = Intent(this,MainMenuActivity::class.java)
                 val intent = Intent(this,EventInfoActivity::class.java);
                 startActivity((intent))
+                finish();
             }else{
 
             }

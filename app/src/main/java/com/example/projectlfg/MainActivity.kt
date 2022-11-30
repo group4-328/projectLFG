@@ -3,6 +3,7 @@ package com.example.projectlfg
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+
 import android.text.Layout
 import android.text.TextUtils
 import android.view.View
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
 
     //ref
-    private lateinit var myref : DatabaseReference
+    private lateinit var myref: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
         // firebase init
         authenticator = FirebaseAuth.getInstance()
-        database  = Firebase.database;
+        database = Firebase.database;
         myref = database.reference;
 
         // UI init
@@ -64,9 +65,12 @@ class MainActivity : AppCompatActivity() {
         nameLayout.visibility = View.GONE
 
         loginButton.setOnClickListener {
-            if(!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(passwordTextEdit.text.toString())){
+            if (!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(
+                    passwordTextEdit.text.toString()
+                )
+            ) {
                 logIn(emailTextEdit.text.toString(), passwordTextEdit.text.toString())
-            }else{
+            } else {
                 popUp(this, "please fill in user information")
             }
         }
@@ -78,16 +82,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun logIn(email: String, password: String){
-        authenticator.signInWithEmailAndPassword(email,password).addOnCompleteListener (this){
-            if(it.isSuccessful){
+    private fun logIn(email: String, password: String) {
+        authenticator.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
+            if (it.isSuccessful) {
                 // load main menu
-                val startMenu = Intent(this,MainMenuActivity::class.java)
+                val startMenu = Intent(this, MainMenuActivity::class.java)
                 startActivity(startMenu)
-            }else{
+                finish();
+            } else {
                 popUp(this, "log in fail, please try again")
             }
         }
     }
-
 }

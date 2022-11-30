@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/projectLFG/app/src/main/res/layout/activity_log_in.xml" value="0.1796875" />
         <entry key="..\:/AndroidStudioProjects/projectLFG/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
         <entry key="app/src/main/res/drawable/circlebox.xml" value="0.163" />

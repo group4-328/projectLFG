@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import com.example.projectlfg.Util.popUp
 import com.example.projectlfg.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -65,6 +66,12 @@ class RegisterActivity : AppCompatActivity() {
 
         Util.checkPermissions(this);
 
+        if(savedInstanceState != null){
+            if(savedInstanceState.containsKey("imguri")){
+                imageUri = savedInstanceState.getString("imguri")!!.toUri();
+            }
+        }
+
 
         UserImageView.setOnClickListener {
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
@@ -83,12 +90,17 @@ class RegisterActivity : AppCompatActivity() {
             val EmailNotEmpty = TextUtils.isEmpty(EmailEditText.text.toString())
             val PasswordNotEmpty = TextUtils.isEmpty(PasswordEditText.text.toString())
 
-            if(!NameNotEmpty && !EmailNotEmpty && !PasswordNotEmpty){
+            if(!NameNotEmpty && !EmailNotEmpty && !PasswordNotEmpty && imageUri != null){
                 signUp(NameEditText.text.toString(),EmailEditText.text.toString(),PasswordEditText.text.toString())
             }else{
                 popUp(this, "please fill in user information")
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("imguri",imageUri.toString());
     }
 
 
@@ -125,6 +137,9 @@ class RegisterActivity : AppCompatActivity() {
                         Toast.makeText(this,it.localizedMessage, Toast.LENGTH_LONG).show()
                     }
 
+                    val intent= Intent(this,MainMenuActivity::class.java);
+                    startActivity(intent);
+                    finish();
 
                 } else {
                     // If sign up fails
