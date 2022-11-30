@@ -175,6 +175,28 @@
         </Button>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Comments"
+            android:gravity="center"
+            android:textSize="20sp"
+            >
+        </TextView>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/commentslistview"
+            >
+
+        </ListView>
+    </LinearLayout>
 
 
     </LinearLayout>

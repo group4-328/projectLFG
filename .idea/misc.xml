@@ -8,6 +8,8 @@
         <entry key="app/src/main/res/drawable/circlebox.xml" value="0.163" />
         <entry key="app/src/main/res/drawable/rectanglebox.xml" value="0.1475" />
         <entry key="app/src/main/res/layout/activity_add_event.xml" value="0.18931159420289856" />
+        <entry key="app/src/main/res/layout/activity_chat.xml" value="0.3375" />
+        <entry key="app/src/main/res/layout/activity_contact_list.xml" value="0.3375" />
         <entry key="app/src/main/res/layout/activity_event_history_row.xml" value="0.18931159420289856" />
         <entry key="app/src/main/res/layout/activity_event_info.xml" value="0.18931159420289856" />
         <entry key="app/src/main/res/layout/activity_events_history.xml" value="0.18931159420289856" />
@@ -17,6 +19,12 @@
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.21158484859742982" />
         <entry key="app/src/main/res/layout/activity_setting_fragment.xml" value="0.18931159420289856" />
         <entry key="app/src/main/res/layout/activity_user.xml" value="0.18931159420289856" />
+        <entry key="app/src/main/res/layout/contactlistlayout.xml" value="0.3375" />
+        <entry key="app/src/main/res/layout/dialog_create_event.xml" value="0.3375" />
+        <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.3375" />
+        <entry key="app/src/main/res/layout/receivemsg.xml" value="0.3375" />
+        <entry key="app/src/main/res/layout/sentmsg.xml" value="0.3375" />
+        <entry key="app/src/main/res/layout/user_comment_view.xml" value="0.1636271529888551" />
         <entry key="app/src/main/res/xml/user_preference.xml" value="0.260595703125" />
       </map>
     </option>
