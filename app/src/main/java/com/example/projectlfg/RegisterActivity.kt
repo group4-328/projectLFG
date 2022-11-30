@@ -13,7 +13,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import com.example.projectlfg.Util.popUp
 import com.example.projectlfg.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -41,7 +40,6 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var myref : DatabaseReference;
     private lateinit var storage: FirebaseStorage;
     private lateinit var storageRef : StorageReference
-    private lateinit var ImgClickButton: Button;
 
     private var imageUri: Uri?=null;
     private lateinit var ImageGalleryIntent : ActivityResultLauncher<Intent>
@@ -58,12 +56,6 @@ class RegisterActivity : AppCompatActivity() {
         PasswordEditText = binding.RegisterPassword
         RegisterButton = binding.RegisterButton
         UserImageView = binding.UserImageView;
-        ImgClickButton = binding.RegisterImgButton;
-
-        ImgClickButton.setOnClickListener {
-            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            ImageGalleryIntent.launch(gallery);
-        }
 
 
         storage = Firebase.storage;
@@ -73,10 +65,10 @@ class RegisterActivity : AppCompatActivity() {
 
         Util.checkPermissions(this);
 
-        if(savedInstanceState != null){
-            if(savedInstanceState.containsKey("imguri")){
-                imageUri = savedInstanceState.getString("imguri")!!.toUri();
-            }
+
+        UserImageView.setOnClickListener {
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            ImageGalleryIntent.launch(gallery);
         }
 
         ImageGalleryIntent = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),{
@@ -91,17 +83,12 @@ class RegisterActivity : AppCompatActivity() {
             val EmailNotEmpty = TextUtils.isEmpty(EmailEditText.text.toString())
             val PasswordNotEmpty = TextUtils.isEmpty(PasswordEditText.text.toString())
 
-            if(!NameNotEmpty && !EmailNotEmpty && !PasswordNotEmpty && imageUri != null){
+            if(!NameNotEmpty && !EmailNotEmpty && !PasswordNotEmpty){
                 signUp(NameEditText.text.toString(),EmailEditText.text.toString(),PasswordEditText.text.toString())
             }else{
                 popUp(this, "please fill in user information")
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString("imguri",imageUri.toString());
     }
 
 
@@ -112,10 +99,17 @@ class RegisterActivity : AppCompatActivity() {
         authenticator.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful && imageUri != null) {
-                    // Sign in success
+                    
+                    // store user profile
                     val uniqueid = UUID.randomUUID();
-                    val ref= storageRef.child("images/"+uniqueid);
+                    val ref= storageRef.child("images/"+ uniqueid);
                     val uploadTask = ref.putFile(imageUri!!);
+
+                    // temporary replacement
+                    val user = authenticator.currentUser;
+                    val userinfo = UserInformation(name,email,"",user!!.uid);
+                    myref.child("users").child(user!!.uid).setValue(userinfo);
+                    Toast.makeText(this,"You've Signed Up Successfully", Toast.LENGTH_LONG).show();
 
                     val urlTask = uploadTask.continueWithTask {
                         if(!task.isSuccessful){
@@ -126,25 +120,19 @@ class RegisterActivity : AppCompatActivity() {
                         ref.downloadUrl
                     }.addOnCompleteListener {
                         if(it.isSuccessful){
+                            // register user to the "user" database
+
                             val downloadUri= it.result;
                             val user = authenticator.currentUser;
-                            val userinfo = UserInformation(name=name,email=email,imageuri=downloadUri.toString());
-                            myref.child("users").child(user!!.uid).setValue(userinfo);
-                            Toast.makeText(this,"You've Signed Up Successfully", Toast.LENGTH_LONG).show();
-                        }else{
-                            popUp(this, "sign up fails..")
+                            myref.child("users").child(user!!.uid).child("imageuri").setValue(uniqueid.toString())
+                            finish()
                         }
+
                     }.addOnFailureListener {
                         Toast.makeText(this,it.localizedMessage, Toast.LENGTH_LONG).show()
                     }
-
-                    val intent= Intent(this,MainMenuActivity::class.java);
-                    startActivity(intent);
-                    finish();
-
-                } else {
-                    // If sign up fails
                 }
+
             }.addOnFailureListener {
                 Toast.makeText(this,it.localizedMessage, Toast.LENGTH_LONG).show()
             }
