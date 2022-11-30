@@ -33,9 +33,10 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
     }
 
     override fun onClick(v: View?) {
-        if (v == scheduledActivityImageButton){}
+        if (v == scheduledActivityImageButton) {
+            startActivity(Intent(this, UserPreferenceActivity::class.java))
+        }
         else if(v==configImageButton){
-
 //            this.supportFragmentManager.beginTransaction().replace(R.id.mainmenulayout,SettingPreferenceFragment())
 //                .addToBackStack(null).commit();
 
@@ -51,6 +52,4 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
             //else->println("click")
         }
     }
-
-
 }

@@ -1,14 +1,16 @@
 package com.example.projectlfg
 
+import CommentInformation
 import DBEventsInformation
 import EventsInformation
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.provider.CalendarContract
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
+import android.view.ViewGroup
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.projectlfg.databinding.ActivityEventInfoBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -23,6 +25,7 @@ interface SetButton{
 
 class EventInfoActivity:AppCompatActivity() {
 
+    private lateinit var listview: ListView
 
     private lateinit var  EventName:EditText;
     private lateinit var DateAndTime:EditText;
@@ -35,7 +38,7 @@ class EventInfoActivity:AppCompatActivity() {
     private lateinit var db:DatabaseReference
 
     private  var EventsIsAdded = false;
-
+    private lateinit var CommentView: ListView;
     private lateinit var binding:ActivityEventInfoBinding;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +54,12 @@ class EventInfoActivity:AppCompatActivity() {
         Attendees = binding.Attendees;
         Location = binding.Location;
         SignUpButton = binding.SignUpEvent;
+
+        CommentView = view.findViewById(R.id.commentslistview)
+        var tmplist= ArrayList<CommentInformation>()
+        tmplist.add(CommentInformation(creator = "dd",date="dd",info="dd", creatorid = "dd"))
+        val adapter = CommentAdapter(tmplist);
+        CommentView.adapter = adapter
 
         exists(object:SetButton{
             override fun IfExistsCancelbutton(check: Boolean,id:String) {
@@ -75,7 +84,6 @@ class EventInfoActivity:AppCompatActivity() {
                         SignUpButton.setText("Sign Up")
                         val db = FirebaseDatabase.getInstance().reference.child("users").child(currid).child("events").child(id).removeValue()
                         DeleteFromDb()
-
                     }
                 }
             }
@@ -90,6 +98,7 @@ class EventInfoActivity:AppCompatActivity() {
         DateAndTime.setText(intent.getStringExtra(MapsActivity.STARTINGDATE))
         EndDateAndTime.setText(intent.getStringExtra(MapsActivity.STARTINGDATE))
         Attendees.setText(intent.getLongExtra("Attendants",0).toString())
+        Location.setText(intent.getStringExtra("LOCATION"));
 
     }
 
@@ -153,7 +162,29 @@ class EventInfoActivity:AppCompatActivity() {
 
     fun addCalendarEvent(view: View){
 
-
-
     }
+}
+
+class CommentAdapter(mlist:ArrayList<CommentInformation>):BaseAdapter(){
+    private lateinit var commentlist:ArrayList<CommentInformation>;
+    init{
+        commentlist = mlist;
+    }
+    override fun getCount(): Int {
+        return commentlist.size;
+    }
+
+    override fun getItem(position: Int): Any {
+        return commentlist.get(position)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return 0;
+    }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.user_comment_view,parent,false);
+        return view;
+    }
+
 }

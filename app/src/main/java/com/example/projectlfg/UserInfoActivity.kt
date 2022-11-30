@@ -1,5 +1,6 @@
 package com.example.projectlfg
 
+import CommentInformation
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -8,10 +9,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,6 +25,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class UserInfoActivity:AppCompatActivity() {
@@ -37,6 +39,8 @@ class UserInfoActivity:AppCompatActivity() {
     private lateinit var UserImgView:ImageView;
     private lateinit var SelectImgButton:Button;
     private lateinit var imguri: Uri;
+
+
 
     private lateinit var galleryResult:ActivityResultLauncher<Intent>;
     private lateinit var sharedPreferences: SharedPreferences;
@@ -64,6 +68,10 @@ class UserInfoActivity:AppCompatActivity() {
         SelectImgButton = view.findViewById(R.id.selectimgbutton);
         UserImgView = view.findViewById(R.id.userimgview)
         passwordfield= view.findViewById(R.id.InsertUserPasswordInfo);
+
+
+
+
 
         if(savedInstanceState != null){
             newImageSelected = savedInstanceState.getBoolean(NEW_IMAGE_SELECTED);
@@ -141,7 +149,5 @@ class UserInfoActivity:AppCompatActivity() {
             editor.putString("email",newEmail);
 
         }
-
-
     }
 }

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
@@ -24,6 +28,8 @@
         android:maxLines="1"
         android:paddingLeft="10dp"
         android:id="@+id/EventName"
+        android:focusable="false"
+        android:clickable="false"
         android:text="Temporary Event"></EditText>
 
     <TextView
@@ -42,6 +48,8 @@
         android:paddingLeft = "10dp"
         android:inputType="text"
         android:text="2022/11/25 09:00"
+        android:focusable="false"
+        android:clickable="false"
         android:id="@+id/DateAndTime"
         android:editable="false"
         android:layout_height="50dp">
@@ -63,7 +71,10 @@
         android:paddingLeft = "10dp"
         android:inputType="text"
         android:text="2022/11/25 13:00"
+        android:focusable="false"
+        android:clickable="false"
         android:id="@+id/enddate"
+
         android:editable="false"
         android:layout_height="50dp">
     </EditText>
@@ -85,6 +96,8 @@
         android:inputType="text"
         android:editable="false"
         android:text="100"
+        android:focusable="false"
+        android:clickable="false"
         android:id="@+id/Attendees"
         android:layout_height="50dp">
     </EditText>
@@ -108,23 +121,84 @@
         android:editable="false"
         android:text="800 Griffiths Way, Vancouver, BC"
         android:id="@+id/Location"
+        android:focusable="false"
+        android:clickable="false"
         android:layout_height="50dp">
     </EditText>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:text="Rate it:"
+            android:gravity="center"
+            android:textSize="20sp"
+            ></TextView>
+        <RatingBar
+            android:id="@+id/ratingbar"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:stepSize="1"
+            android:numStars="4"
+            android:theme="@style/Widget.AppCompat.RatingBar"
+            ></RatingBar>
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="50dp"
+        android:orientation="horizontal"
         android:gravity="center"
         >
         <Button
             android:id="@+id/SignUpEvent"
             android:text="Sign Up"
             android:layout_height="match_parent"
-            android:layout_width="300dp"
+            android:layout_width="150dp"
             >
-
+        </Button>
+        <Button
+            android:id="@+id/SaveEvent"
+            android:text="Save Event"
+            android:layout_height="match_parent"
+            android:layout_width="150dp"
+            android:layout_marginLeft="10dp"
+            >
         </Button>
     </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Comments"
+            android:gravity="center"
+            android:textSize="20sp"
+            >
+        </TextView>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/commentslistview"
+            >
+
+        </ListView>
+    </LinearLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>
