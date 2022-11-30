@@ -42,11 +42,13 @@
             android:exported="false" />
 
 
-
         <activity
-            android:name=".MapsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_maps" />
+            android:name=".EventInfoActivity"
+            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".MapsActivity"-->
+<!--            android:exported="false"-->
+<!--            android:label="@string/title_activity_maps" />-->
         <activity
             android:name=".LogInActivity"
             android:exported="false" />
@@ -56,6 +58,10 @@
         <activity
             android:name=".UserHistoryActivity"
             android:exported="false" />
+        <activity
+            android:name=".MapsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_maps" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

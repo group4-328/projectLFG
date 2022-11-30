@@ -1,5 +1,7 @@
 package com.example.projectlfg
 
+import DBEventsInformation
+import EventsInformation
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
@@ -11,16 +13,15 @@ import android.icu.util.Calendar
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.TimePicker
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import java.util.*
 
 class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDateSetListener, OnTimeSetListener {
@@ -36,6 +37,7 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
     private lateinit var timeText: TextView
     private lateinit var locationEditText: EditText
     private lateinit var informationEditText: EditText
+    private lateinit var attendantsnumber:EditText;
 
     private var address: Address? = null
 
@@ -61,6 +63,9 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
         val builder = AlertDialog.Builder(requireActivity())
 
         view = requireActivity().layoutInflater.inflate(R.layout.dialog_create_event, null)
+
+
+
         initUIElements(view)
         onDateSet(
             null,
@@ -98,11 +103,23 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
 
         builder.setView(view)
         builder.setTitle(dialogTitle)
-        builder.setPositiveButton("ok", this)
+        builder.setPositiveButton("ok",this)
         builder.setNegativeButton("cancel", this)
         dialog = builder.create()
 
         return dialog
+    }
+
+    fun InsertNewEvent(){
+        val db = FirebaseDatabase.getInstance().reference
+        val eventinfo = EventsInformation(name = nameEditText.text.toString(),
+            startingdate = dateText.text.toString(), endtime=dateText.text.toString(),
+            attendess = attendantsnumber.text.toString().toLong(),
+            location =  locationEditText.text.toString())
+        val randomid = UUID.randomUUID()
+        db.child("events").child(randomid.toString()).setValue(eventinfo)
+        db.child("events").child(randomid.toString()).child("information").setValue(informationEditText.text.toString());
+
     }
 
     fun initUIElements(view: View) {
@@ -111,6 +128,7 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
         timeText = view.findViewById(R.id.time_text)
         locationEditText = view.findViewById(R.id.location_editText)
         informationEditText = view.findViewById(R.id.information_editText)
+        attendantsnumber = view.findViewById(R.id.attendants_edittext)
     }
 
     override fun onClick(dialog: DialogInterface?, which: Int) {
@@ -122,25 +140,42 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
             }
             else {
                 // save to database here
-                var string = ""
-                string += "Debug: Name=${nameEditText.text}\nLat=${latLng?.latitude} Lng=${latLng?.longitude}\n"
-                string += "Address="
+//                var string = ""
+//                string += "Debug: Name=${nameEditText.text}\nLat=${latLng?.latitude} Lng=${latLng?.longitude}\n"
+//                string += "Address="
                 if (latLng == null) {
                     latLng = getLatLngFromAddress(locationEditText.text.toString())
                 }
-                if (latLng != null) {
-                    address = getAddressFromLatLng(latLng!!)
-                    for (i in 0..address?.maxAddressLineIndex!!) {
-                        string += address?.getAddressLine(i)
-                    }
-                }
-                string += "\nDate=$day/$month/$year Time=$hour:$min:00\n"
-                if (informationEditText.text != null) {
-                    string += "Info: ${informationEditText.text}"
+//                if (latLng != null) {
+//                    address = getAddressFromLatLng(latLng!!)
+//                    for (i in 0..address?.maxAddressLineIndex!!) {
+//                        string += address?.getAddressLine(i)
+//                    }
+//                }
+//                string += "\nDate=$day/$month/$year Time=$hour:$min:00\n"
+//                if (informationEditText.text != null) {
+//                    string += "Info: ${informationEditText.text}"
+//                }
+//
+//                println("Debug: latlng from address: lat=${latLng?.latitude}lng=${latLng?.longitude}")
+//                println(string)
+//                dismiss()
+                if(latLng == null){
+                    return;
                 }
 
-                println("Debug: latlng from address: lat=${latLng?.latitude}lng=${latLng?.longitude}")
-                println(string)
+                val curruser = FirebaseAuth.getInstance().currentUser
+                val dateformat = "${day}/${month}/${year} ${hour}:${min}:00"
+                val uid = UUID.randomUUID().toString()
+
+                var newinfo = DBEventsInformation(
+                    name =nameEditText.text.toString(), startingdate = dateformat ,
+                                                attendess = attendantsnumber.text.toString().toLong(),
+                    location =locationEditText.text.toString(),
+                                                latLng = latLng!!, information = informationEditText.text.toString(),
+                                            creator = curruser!!.uid,id=uid)
+                val db = FirebaseDatabase.getInstance().reference.child("events1").child(uid)
+                db.setValue(newinfo);
                 dismiss()
             }
 
