@@ -30,6 +30,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRoomMsgs"
+        tools:listitem="@layout/sentmsg"
         android:layout_width="match_parent"
         android:layout_height="580dp"
         android:layout_marginBottom="7sp"

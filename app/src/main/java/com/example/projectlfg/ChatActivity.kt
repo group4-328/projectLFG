@@ -2,10 +2,8 @@ package com.example.projectlfg
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Adapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectlfg.MainActivity.Companion.currentUser
@@ -35,7 +33,7 @@ class ChatActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val name = intent.getStringExtra("name")
-        val receiverUID = intent.getStringExtra("receiver")
+        receiverUID = intent.getStringExtra("receiver")!!
         sendButton = binding.chatRoomSend
         binding.chatRoomName.text = name
         messageBox = binding.chatRoomInput
@@ -46,7 +44,7 @@ class ChatActivity : AppCompatActivity() {
 
         chatView = binding.chatRoomMsgs
         chatView.layoutManager = LinearLayoutManager(this)
-        adapter = MsgAdapter(this, arrayListOf())
+        adapter = MsgAdapter(this, msgList)
         chatView.adapter = adapter
 
 
@@ -65,9 +63,8 @@ class ChatActivity : AppCompatActivity() {
                     }
 
                     adapter.notifyDataSetChanged()
-                    println(" msg received")
+                    println(" msg updated")
                 }
-
 
                 override fun onCancelled(error: DatabaseError) {
                     println(error)
@@ -86,8 +83,8 @@ class ChatActivity : AppCompatActivity() {
                     println("msg pushed")
                 }
 
-            messageBox.setText(" ")
-            messageBox.hint = " "
+            messageBox.setText("")
+            messageBox.hint = ""
         }
     }
 }

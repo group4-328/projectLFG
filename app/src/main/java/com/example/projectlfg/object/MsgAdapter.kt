@@ -7,18 +7,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectlfg.MainActivity.Companion.authenticator
-import com.google.firebase.ktx.Firebase
 
 class MsgAdapter(val context: Context, val msgList: ArrayList<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
 
-
     class SentMsgHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        val msg = itemView.findViewById<TextView>(R.id.sentMsg)
+        val msg = itemView.findViewById<TextView>(R.id.sentmsgtext)
     }
 
     class ReceiveMsgHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        val msg = itemView.findViewById<TextView>(R.id.receiveMsg)
+        val msg = itemView.findViewById<TextView>(R.id.receivemsgtext)
     }
 
     // return proper view type to determin sent/receive msg type
@@ -27,7 +25,7 @@ class MsgAdapter(val context: Context, val msgList: ArrayList<Message>): Recycle
         val currentTxt = msgList[position]
 
         // sent msg
-        if(authenticator.currentUser!!.uid.equals(currentTxt.sender)){
+        if(authenticator.currentUser!!.uid == currentTxt.sender){
             return 1
 
         //  receive msg
@@ -39,6 +37,8 @@ class MsgAdapter(val context: Context, val msgList: ArrayList<Message>): Recycle
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         lateinit var view: View
+
+        println("creating view holder")
 
         // if it's a sent msg
         if(viewType == 1){
@@ -54,6 +54,8 @@ class MsgAdapter(val context: Context, val msgList: ArrayList<Message>): Recycle
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         val currentTxt = msgList[position]
+
+        println("binding view holder")
 
         // if it's a sent msg
         if(holder.javaClass == SentMsgHolder::class.java){

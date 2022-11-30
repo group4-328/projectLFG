@@ -20,11 +20,15 @@ class ContactAdapter(val context: Context, val userList: ArrayList<UserInformati
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
 
+        println(" contact creating")
+
         val view = LayoutInflater.from(context).inflate(R.layout.contactlistlayout, parent, false)
         return ContactViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
+
+        println(" contact binding")
 
         val currentContact = userList[position]
         holder.contactName.text = currentContact.name

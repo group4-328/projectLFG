@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.projectlfg.MainActivity.Companion.authenticator
-import com.example.projectlfg.ContactAdapter
 import com.example.projectlfg.MainActivity.Companion.currentUser
 import com.example.projectlfg.databinding.ActivityContactListBinding
 import com.google.firebase.database.DataSnapshot
@@ -15,10 +13,10 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-private lateinit var binding: ActivityContactListBinding
 
 class ContactListActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityContactListBinding
     private lateinit var contactList: ArrayList<UserInformation>
     private lateinit var adapter: ContactAdapter
     private lateinit var databaseRef: DatabaseReference
@@ -34,7 +32,6 @@ class ContactListActivity : AppCompatActivity() {
         // initilize firebase-related content
         databaseRef = Firebase.database.reference
         contactList = arrayListOf()
-
 
         adapter = ContactAdapter(this, contactList)
         val contactView: RecyclerView = binding.userContactList
