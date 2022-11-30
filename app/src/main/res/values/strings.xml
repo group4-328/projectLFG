@@ -12,9 +12,12 @@
     <!-- For the gps create event dialog -->
     <string name="event_name">Event Name</string>
     <string name="event_name_hint">Enter a name for the event</string>
-    <string name="date_time">Date and Time</string>
+    <string name="start_date_time">Start Date and Time</string>
+    <string name="end_date_time">End Date and Time</string>
     <string name="location">Location</string>
     <string name="location_hint">Enter an address</string>
+    <string name="capacity">Event Capacity</string>
+    <string name="capacity_hint">Enter max capacity of the event</string>
     <string name="information">Information</string>
     <string name="information_hint">Enter event description</string>
 

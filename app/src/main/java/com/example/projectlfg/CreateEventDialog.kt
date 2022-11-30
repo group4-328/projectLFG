@@ -20,7 +20,16 @@ import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.example.projectlfg.`object`.EventInformation
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import java.util.*
 
 class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDateSetListener, OnTimeSetListener {
@@ -31,28 +40,41 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
         val dialogKey = "Dialog"
     }
 
+    private lateinit var authenticator: FirebaseAuth;
+    private lateinit var myref : DatabaseReference;
+    private lateinit var storage: FirebaseStorage;
+    private lateinit var storageRef : StorageReference
+
     private lateinit var nameEditText: EditText
-    private lateinit var dateText: TextView
-    private lateinit var timeText: TextView
+    private lateinit var startDateText: TextView
+    private lateinit var startTimeText: TextView
+    private lateinit var endDateText: TextView
+    private lateinit var endTimeText: TextView
     private lateinit var locationEditText: EditText
+    private lateinit var capacityEditText: EditText
     private lateinit var informationEditText: EditText
+
+    private lateinit var startDatePickerDialog: DatePickerDialog
+    private lateinit var startTimePickerDialog: TimePickerDialog
+    private lateinit var endDatePickerDialog: DatePickerDialog
+    private lateinit var endTimePickerDialog: TimePickerDialog
 
     private var address: Address? = null
 
     private var latLng: LatLng? = null
-    private val calendar = Calendar.getInstance()
 
-    private var year = 0
-    private var month = 0
-    private var day = 0
-    private var hour = 0
-    private var min = 0
-    private var sec = 0
+    private var startTime = Calendar.getInstance()
+    private var endTime = Calendar.getInstance()
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         lateinit var dialog: Dialog
         lateinit var view: View
+
+        storage = Firebase.storage;
+        storageRef = storage.reference
+        authenticator = FirebaseAuth.getInstance()
+        myref = Firebase.database.reference
 
         // build dialog
         var dialogTitle = arguments?.getString(dialogTitleKey)
@@ -62,35 +84,25 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
 
         view = requireActivity().layoutInflater.inflate(R.layout.dialog_create_event, null)
         initUIElements(view)
-        onDateSet(
-            null,
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        onTimeSet(
-            null,
-            calendar.get(Calendar.HOUR_OF_DAY),
-            calendar.get(Calendar.MINUTE)
-        )
 
-        dateText.setOnClickListener(View.OnClickListener {
-            val datePickerDialog = DatePickerDialog(
-                requireActivity(), this,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            )
-            datePickerDialog.show()
+        setStartDateTimeText()
+        setEndDateTimeText()
+
+        startDateText.setOnClickListener(View.OnClickListener {
+
+            startDatePickerDialog.show()
         })
-        timeText.setOnClickListener(View.OnClickListener {
-            val timePickerDialog = TimePickerDialog(
-                requireActivity(), this,
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),
-                false
-            )
-            timePickerDialog.show()
+        startTimeText.setOnClickListener(View.OnClickListener {
+
+            startTimePickerDialog.show()
+        })
+        endDateText.setOnClickListener(View.OnClickListener {
+
+            endDatePickerDialog.show()
+        })
+        endTimeText.setOnClickListener(View.OnClickListener {
+
+            endTimePickerDialog.show()
         })
 
         // handle inputs
@@ -105,42 +117,129 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
         return dialog
     }
 
+    fun setStartDateTimeText() {
+        startDateText.setText(
+            "${startTime.get(Calendar.YEAR)}/${startTime.get(Calendar.MONTH) + 1}/${startTime.get(Calendar.DAY_OF_MONTH)}"
+        )
+        var hrString = ""
+        if (startTime.get(Calendar.HOUR_OF_DAY) < 10) { hrString += "0" }
+        hrString += "${startTime.get(Calendar.HOUR_OF_DAY)}"
+        var minString = ""
+        if (startTime.get(Calendar.MINUTE) < 10) { minString += "0" }
+        minString += "${startTime.get(Calendar.MINUTE)}"
+        startTimeText.setText("$hrString:$minString:00")
+    }
+
+    fun setEndDateTimeText() {
+        endDateText.setText(
+            "${endTime.get(Calendar.YEAR)}/${endTime.get(Calendar.MONTH) + 1}/${endTime.get(Calendar.DAY_OF_MONTH)}"
+        )
+        var hrString = ""
+        if (endTime.get(Calendar.HOUR_OF_DAY) < 10) { hrString += "0" }
+        hrString += "${endTime.get(Calendar.HOUR_OF_DAY)}"
+        var minString = ""
+        if (endTime.get(Calendar.MINUTE) < 10) { minString += "0" }
+        minString += "${endTime.get(Calendar.MINUTE)}"
+        endTimeText.setText("$hrString:$minString:00")
+    }
+
     fun initUIElements(view: View) {
         nameEditText = view.findViewById(R.id.event_name_editText)
-        dateText = view.findViewById(R.id.date_text)
-        timeText = view.findViewById(R.id.time_text)
+        startDateText = view.findViewById(R.id.start_date_text)
+        startTimeText = view.findViewById(R.id.start_time_text)
+        endDateText = view.findViewById(R.id.end_date_text)
+        endTimeText = view.findViewById(R.id.end_time_text)
         locationEditText = view.findViewById(R.id.location_editText)
+        capacityEditText = view.findViewById(R.id.event_capacity_editText)
         informationEditText = view.findViewById(R.id.information_editText)
+
+        startDatePickerDialog = DatePickerDialog(
+            requireActivity(), this,
+            startTime.get(Calendar.YEAR),
+            startTime.get(Calendar.MONTH),
+            startTime.get(Calendar.DAY_OF_MONTH)
+        )
+        startTimePickerDialog = TimePickerDialog(
+            requireActivity(), TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+                startTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                startTime.set(Calendar.MINUTE, minute)
+                var hrString = ""
+                if (hourOfDay < 10) { hrString += "0" }
+                hrString += "$hourOfDay"
+                var minString = ""
+                if (minute < 10) { minString += "0" }
+                minString += "$minute"
+                startTimeText.setText("$hrString:$minString:00")
+            },
+            startTime.get(Calendar.HOUR_OF_DAY),
+            startTime.get(Calendar.MINUTE),
+            false
+        )
+        endDatePickerDialog = DatePickerDialog(
+            requireActivity(), this,
+            endTime.get(Calendar.YEAR),
+            endTime.get(Calendar.MONTH),
+            endTime.get(Calendar.DAY_OF_MONTH)
+        )
+        endTimePickerDialog = TimePickerDialog(
+            requireActivity(),
+            TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+                var hrString = ""
+                if (hourOfDay < 10) { hrString += "0" }
+                hrString += "$hourOfDay"
+                var minString = ""
+                if (minute < 10) { minString += "0" }
+                minString += "$minute"
+                endTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                endTime.set(Calendar.MINUTE, minute)
+                endTimeText.setText("$hrString:$minString:00")
+            },
+            endTime.get(Calendar.HOUR_OF_DAY),
+            endTime.get(Calendar.MINUTE),
+            false
+        )
     }
 
     override fun onClick(dialog: DialogInterface?, which: Int) {
         // If ok, need to save info into database
         if (which == Dialog.BUTTON_POSITIVE) {
             // gather all enter information and save
-            if (nameEditText.text.toString() == "" || locationEditText.text.toString() == "") {
-
+            if (nameEditText.text.toString() == "" ||
+                locationEditText.text.toString() == "" ||
+                capacityEditText.text.toString() == "") {
+                    // need to enter mandatory items
             }
             else {
+                var addressString = ""
                 // save to database here
-                var string = ""
-                string += "Debug: Name=${nameEditText.text}\nLat=${latLng?.latitude} Lng=${latLng?.longitude}\n"
-                string += "Address="
                 if (latLng == null) {
                     latLng = getLatLngFromAddress(locationEditText.text.toString())
                 }
                 if (latLng != null) {
                     address = getAddressFromLatLng(latLng!!)
+
                     for (i in 0..address?.maxAddressLineIndex!!) {
-                        string += address?.getAddressLine(i)
+                        addressString += address?.getAddressLine(i)
                     }
                 }
-                string += "\nDate=$day/$month/$year Time=$hour:$min:00\n"
-                if (informationEditText.text != null) {
-                    string += "Info: ${informationEditText.text}"
+                var eventInformation = authenticator.currentUser?.let {
+                    latLng?.let { it1 ->
+                        EventInformation(
+                            nameEditText.text.toString(),
+                            it,
+                            it1,
+                            addressString,
+                            startTime,
+                            endTime,
+                            capacityEditText.text.toString().toInt(),
+                            informationEditText.text.toString()
+                        )
+                    }
+                }
+                if (eventInformation != null) {
+                    writeToDatabase(eventInformation)
                 }
 
-                println("Debug: latlng from address: lat=${latLng?.latitude}lng=${latLng?.longitude}")
-                println(string)
                 dismiss()
             }
 
@@ -149,6 +248,11 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
         else {
             dismiss()
         }
+    }
+
+    fun writeToDatabase(eventInfo: EventInformation) {
+        val uniqueid = UUID.randomUUID();
+        myref.child("events").child(uniqueid.toString()).setValue(eventInfo)
     }
 
     fun setAddressText() {
@@ -183,21 +287,26 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        this.year = year
-        this.month = month + 1
-        this.day = dayOfMonth
-        dateText.setText("${this.day}/${this.month}/${this.year}")
+        if (view == startDatePickerDialog.datePicker) {
+            startTime.set(Calendar.YEAR, year)
+            startTime.set(Calendar.MONTH, month)
+            startTime.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            startDateText.setText(
+                "${startTime.get(Calendar.YEAR)}/${startTime.get(Calendar.MONTH) + 1}/${startTime.get(Calendar.DAY_OF_MONTH)}"
+            )
+        }
+        else {
+            endTime.set(Calendar.YEAR, year)
+            endTime.set(Calendar.MONTH, month)
+            endTime.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            endDateText.setText(
+                "${endTime.get(Calendar.YEAR)}/${endTime.get(Calendar.MONTH) + 1}/${endTime.get(Calendar.DAY_OF_MONTH)}"
+            )
+        }
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        this.hour = hourOfDay
-        this.min = minute
-        var hr = ""
-        if (this.hour < 10) { hr += "0" }
-        hr += this.hour
-        var min = ""
-        if (this.min < 10) { min += "0" }
-        min += this.min
-        timeText.setText("${hr}:${min}:00")
+        TODO("Not yet implemented")
     }
+
 }

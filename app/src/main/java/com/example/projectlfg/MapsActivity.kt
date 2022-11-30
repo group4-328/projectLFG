@@ -17,12 +17,24 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.projectlfg.databinding.ActivityMapsBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     companion object {
         val latLngKey = "lat_lng_key"
     }
+
+    private lateinit var authenticator: FirebaseAuth;
+    private lateinit var myref : DatabaseReference;
+    private lateinit var storage: FirebaseStorage;
+    private lateinit var storageRef : StorageReference
 
     private lateinit var createEventButton: Button
 
@@ -44,6 +56,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        storage = Firebase.storage;
+        storageRef = storage.reference
+        authenticator = FirebaseAuth.getInstance()
+        myref = Firebase.database.reference
 
         createEventButton = findViewById(R.id.create_event_map_button)
     }
