@@ -2,13 +2,15 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
+
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'//XD added
     id 'kotlin-kapt' //XD added
 
     //for firebase
     // Add the Google services Gradle plugin
-    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'com.google.gms.google-services'
 }
-apply plugin: 'com.google.gms.google-services'
+
 android {
     compileSdk 33
 
@@ -84,10 +86,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     implementation 'com.google.firebase:firebase-database-ktx'
-    implementation 'com.firebaseui:firebase-ui-storage:7.2.0'
+
     implementation 'com.google.firebase:firebase-storage-ktx'
 
-    implementation 'com.google.android.gms:play-services-maps:18.1.0'
-    implementation 'com.google.android.gms:play-services-location:16.0.0'
+
     // TODO: Add the dependencies for Firebase products you want to use
 }

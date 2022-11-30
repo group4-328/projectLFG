@@ -1,5 +1,7 @@
 package com.example.projectlfg
 
+import DBEventsInformation
+import EventsInformation
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
@@ -11,26 +13,17 @@ import android.icu.util.Calendar
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.TimePicker
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.projectlfg.`object`.EventInformation
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
 import java.util.*
 
 class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDateSetListener, OnTimeSetListener {
@@ -51,6 +44,7 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
     private lateinit var locationEditText: EditText
     private lateinit var capacityEditText: EditText
     private lateinit var informationEditText: EditText
+    private lateinit var attendantsnumber:EditText;
 
     private lateinit var startDatePickerDialog: DatePickerDialog
     private lateinit var startTimePickerDialog: TimePickerDialog
@@ -76,6 +70,9 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
         val builder = AlertDialog.Builder(requireActivity())
 
         view = requireActivity().layoutInflater.inflate(R.layout.dialog_create_event, null)
+
+
+
         initUIElements(view)
 
         setStartDateTimeText()
@@ -103,7 +100,7 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
 
         builder.setView(view)
         builder.setTitle(dialogTitle)
-        builder.setPositiveButton("ok", this)
+        builder.setPositiveButton("ok",this)
         builder.setNegativeButton("cancel", this)
         dialog = builder.create()
 
@@ -136,6 +133,18 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
         endTimeText.setText("$hrString:$minString:00")
     }
 
+    fun InsertNewEvent(){
+        val db = FirebaseDatabase.getInstance().reference
+        val eventinfo = EventsInformation(name = nameEditText.text.toString(),
+            startingdate = startDateText.text.toString(), endtime=endDateText.text.toString(),
+            attendess = attendantsnumber.text.toString().toLong(),
+            location =  locationEditText.text.toString())
+        val randomid = UUID.randomUUID()
+        db.child("events").child(randomid.toString()).setValue(eventinfo)
+        db.child("events").child(randomid.toString()).child("information").setValue(informationEditText.text.toString());
+
+    }
+
     fun initUIElements(view: View) {
         nameEditText = view.findViewById(R.id.event_name_editText)
         startDateText = view.findViewById(R.id.start_date_text)
@@ -143,7 +152,6 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
         endDateText = view.findViewById(R.id.end_date_text)
         endTimeText = view.findViewById(R.id.end_time_text)
         locationEditText = view.findViewById(R.id.location_editText)
-        capacityEditText = view.findViewById(R.id.event_capacity_editText)
         informationEditText = view.findViewById(R.id.information_editText)
 
         startDatePickerDialog = DatePickerDialog(
@@ -191,6 +199,7 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
             endTime.get(Calendar.MINUTE),
             false
         )
+        attendantsnumber = view.findViewById(R.id.attendants_edittext)
     }
 
     override fun onClick(dialog: DialogInterface?, which: Int) {
@@ -199,10 +208,12 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
             // gather all enter information and save
             if (nameEditText.text.toString() == "" ||
                 locationEditText.text.toString() == "" ||
-                capacityEditText.text.toString() == "") {
+                attendantsnumber.text.toString() == "") {
                     // need to enter mandatory items
             }
             else {
+                val curruser = FirebaseAuth.getInstance().currentUser
+                val uid = UUID.randomUUID().toString()
                 var addressString = ""
                 // save to database here
                 if (latLng == null) {
@@ -216,21 +227,61 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
                     }
                 }
                 var eventInformation = latLng?.let { it1 ->
-                    EventInformation(
+                    DBEventsInformation(
                         nameEditText.text.toString(),
-                        it1,
+                        getStringFromTime(startTime),
+                        attendantsnumber.text.toString().toLong(),
                         addressString,
-                        startTime.timeInMillis,
-                        endTime.timeInMillis,
-                        capacityEditText.text.toString().toInt(),
-                        informationEditText.text.toString()
+                        it1,
+                        informationEditText.text.toString(),
+                        curruser!!.uid,
+                        uid
                     )
                 }
 
                 if (eventInformation != null) {
                     writeToDatabase(eventInformation)
                 }
+/*
+=======
+//                var string = ""
+//                string += "Debug: Name=${nameEditText.text}\nLat=${latLng?.latitude} Lng=${latLng?.longitude}\n"
+//                string += "Address="
+                if (latLng == null) {
+                    latLng = getLatLngFromAddress(locationEditText.text.toString())
+                }
+//                if (latLng != null) {
+//                    address = getAddressFromLatLng(latLng!!)
+//                    for (i in 0..address?.maxAddressLineIndex!!) {
+//                        string += address?.getAddressLine(i)
+//                    }
+//                }
+//                string += "\nDate=$day/$month/$year Time=$hour:$min:00\n"
+//                if (informationEditText.text != null) {
+//                    string += "Info: ${informationEditText.text}"
+//                }
+//
+//                println("Debug: latlng from address: lat=${latLng?.latitude}lng=${latLng?.longitude}")
+//                println(string)
+//                dismiss()
+                if(latLng == null){
+                    return;
+                }
 
+                val curruser = FirebaseAuth.getInstance().currentUser
+                val dateformat = "${day}/${month}/${year} ${hour}:${min}:00"
+                val uid = UUID.randomUUID().toString()
+
+                var newinfo = DBEventsInformation(
+                    name =nameEditText.text.toString(), startingdate = dateformat ,
+                                                attendess = attendantsnumber.text.toString().toLong(),
+                    location =locationEditText.text.toString(),
+                                                latLng = latLng!!, information = informationEditText.text.toString(),
+                                            creator = curruser!!.uid,id=uid)
+                val db = FirebaseDatabase.getInstance().reference.child("events1").child(uid)
+                db.setValue(newinfo);
+
+ */
                 dismiss()
             }
 
@@ -241,10 +292,22 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
         }
     }
 
-    fun writeToDatabase(eventInfo: EventInformation) {
-        val uniqueid = UUID.randomUUID();
-        myref = FirebaseDatabase.getInstance().reference
-        myref.child("events").push().setValue(eventInfo)
+    fun getStringFromTime(time: Calendar): String {
+        var string = "${time.get(Calendar.DAY_OF_MONTH)}/" +
+                "${time.get(Calendar.DAY_OF_MONTH)+1}" +
+                "/${time.get(Calendar.YEAR)}" +
+                " ${time.get(Calendar.HOUR_OF_DAY)}:" +
+                "${time.get(Calendar.MINUTE)}:00"
+        return string
+    }
+
+    fun writeToDatabase(eventInfo: DBEventsInformation) {
+        //val uniqueid = UUID.randomUUID();
+        //myref = FirebaseDatabase.getInstance().reference
+
+        val db = FirebaseDatabase.getInstance().reference.child("events1").child(eventInfo.id)
+        db.setValue(eventInfo)
+        //myref.child("events").push().setValue(eventInfo)
     }
 
     fun setAddressText() {

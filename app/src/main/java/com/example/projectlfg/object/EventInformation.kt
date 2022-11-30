@@ -8,8 +8,10 @@ data class EventInformation(
     var name: String,
     var latLng: LatLng,
     var address: String,
-    val startTime: Long,
-    var endTime: Long,
-    var capacity: Int,
-    var info: String
+    val startTime: String,
+    var endTime: String,
+    var attendess: Long,
+    var information: String,
+    var creator: String,
+    var id: String
     ): java.io.Serializable

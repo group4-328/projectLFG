@@ -17,7 +17,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.registerForActivityResult
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
+//import com.bumptech.glide.Glide
 import com.example.projectlfg.databinding.ActivityUserBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -99,7 +99,7 @@ class UserInfoActivity:AppCompatActivity() {
                 emailfield.setText(tmp.get("email"))
 
                 val imgURL = tmp.get("imageuri")
-                Glide.with(this).load(imgURL).into(UserImgView);
+//                Glide.with(this).load(imgURL).into(UserImgView);
             }.addOnFailureListener {
                 Log.e("firebase","error getting data")
             }

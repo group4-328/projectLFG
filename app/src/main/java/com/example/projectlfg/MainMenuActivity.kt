@@ -18,16 +18,16 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
         setContentView(R.layout.activity_main_menu)
 
         // init image view
-        findActivityImageButton = findViewById(R.id.findActivityImageButton)
+        findActivityImageButton         = findViewById(R.id.findActivityImageButton)
         findActivityImageButton.setOnClickListener(this)
 
-        scheduledActivityImageButton = findViewById(R.id.scheduleActivityImageButton)
+        scheduledActivityImageButton    = findViewById(R.id.scheduleActivityImageButton)
         scheduledActivityImageButton.setOnClickListener(this)
 
-        contactListImageButton = findViewById(R.id.contactListImageButton)
+        contactListImageButton          = findViewById(R.id.contactListImageButton)
         contactListImageButton.setOnClickListener(this)
 
-        configImageButton = findViewById(R.id.configImageButton)
+        configImageButton               = findViewById(R.id.configImageButton)
         configImageButton.setOnClickListener(this)
 
     }

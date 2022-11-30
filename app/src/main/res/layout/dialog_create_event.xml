@@ -94,22 +94,22 @@
         android:textSize="20sp"
         android:layout_marginHorizontal="10dp"
         android:hint="@string/location_hint"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/capacity"
+        android:text="Max Number of Attendants"
         android:textSize="15sp"
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="10dp"/>
     <EditText
-        android:id="@+id/event_capacity_editText"
+        android:id="@+id/attendants_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"
         android:textSize="20sp"
+        android:text="0"
+        android:inputType="number"
         android:layout_marginHorizontal="10dp"
-        android:hint="@string/capacity_hint"/>
+        />
 
     <TextView
         android:layout_width="wrap_content"

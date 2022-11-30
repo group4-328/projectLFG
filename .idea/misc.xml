@@ -4,7 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <entry key="../../../../../layout/custom_preview.xml" value="0.1" />
+=======
+>>>>>>> b85895ef14e76deae3e4e6dfbff43d40fba59f89
         <entry key="..\:/AndroidStudioProjects/projectLFG/app/src/main/res/layout/activity_log_in.xml" value="0.1796875" />
         <entry key="..\:/AndroidStudioProjects/projectLFG/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
 =======
@@ -36,12 +39,11 @@
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.21158484859742982" />
         <entry key="app/src/main/res/layout/activity_setting_fragment.xml" value="0.18931159420289856" />
         <entry key="app/src/main/res/layout/activity_user.xml" value="0.18931159420289856" />
-        <entry key="app/src/main/res/layout/activity_user_setting.xml" value="0.3375" />
         <entry key="app/src/main/res/xml/user_preference.xml" value="0.260595703125" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

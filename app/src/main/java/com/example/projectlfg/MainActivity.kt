@@ -10,7 +10,6 @@ import android.text.TextUtils
 import android.widget.*
 import com.example.projectlfg.Util.popUp
 import com.example.projectlfg.databinding.ActivityMainBinding
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -37,11 +36,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
 
     //ref
-    private lateinit var myref: DatabaseReference
+    private lateinit var myref : DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FirebaseApp.initializeApp(this);
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
@@ -55,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
         // firebase init ()
         authenticator = FirebaseAuth.getInstance()
-        database = Firebase.database;
+        database  = Firebase.database;
         myref = database.reference;
 
         // UI init
@@ -63,12 +61,9 @@ class MainActivity : AppCompatActivity() {
         logoView.setImageResource(R.drawable.logo)
 
         loginButton.setOnClickListener {
-            if (!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(
-                    passwordTextEdit.text.toString()
-                )
-            ) {
+            if(!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(passwordTextEdit.text.toString())){
                 logIn(emailTextEdit.text.toString(), passwordTextEdit.text.toString())
-            } else {
+            }else{
                 popUp(this, "please fill in user information")
             }
         }
@@ -80,9 +75,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun logIn(email: String, password: String) {
-        authenticator.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
-            if (it.isSuccessful) {
+    private fun logIn(email: String, password: String){
+        authenticator.signInWithEmailAndPassword(email,password).addOnCompleteListener (this){
+            if(it.isSuccessful){
                 // load main menu
 
                 // set currentUser information
@@ -95,10 +90,10 @@ class MainActivity : AppCompatActivity() {
                 }.addOnFailureListener {
 
                 }
+
                 val startMenu = Intent(this,MainMenuActivity::class.java)
                 startActivity(startMenu)
-                finish();
-            } else {
+            }else{
                 popUp(this, "log in fail, please try again")
             }
         }
