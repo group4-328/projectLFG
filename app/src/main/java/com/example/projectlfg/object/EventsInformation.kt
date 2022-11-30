@@ -8,7 +8,8 @@ data class EventsInformation (
     var startingdate:String,
     var endtime:String,
     var attendess:Long,
-    var location:String
+    var location:String,
+    var id:String = ""
 
         )
 

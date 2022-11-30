@@ -10,7 +10,6 @@ class SettingPreferenceFragment: PreferenceFragmentCompat(), Preference.OnPrefer
     lateinit var History:Preference;
     companion object{
         val USERINFO="UserInfo"
-        val HISTORYINFO = "HistoryInfo"
     }
 
     override fun onPreferenceClick(preference: Preference): Boolean {
@@ -20,7 +19,6 @@ class SettingPreferenceFragment: PreferenceFragmentCompat(), Preference.OnPrefer
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.user_preference,rootKey);
         UserPref = findPreference<Preference>(USERINFO)!!
-        History = findPreference<Preference>(HISTORYINFO)!!
 
 
         UserPref.onPreferenceClickListener = object :Preference.OnPreferenceClickListener{
@@ -31,13 +29,6 @@ class SettingPreferenceFragment: PreferenceFragmentCompat(), Preference.OnPrefer
             }
         }
 
-        History.onPreferenceClickListener = object:Preference.OnPreferenceClickListener{
-            override fun onPreferenceClick(preference: Preference): Boolean {
-                val intent = Intent(activity,UserHistoryActivity::class.java);
-                startActivity(intent);
-                return true;
-            }
 
-        }
     }
 }

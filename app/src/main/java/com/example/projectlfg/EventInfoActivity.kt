@@ -90,6 +90,7 @@ class EventInfoActivity:AppCompatActivity() {
         DateAndTime.setText(intent.getStringExtra(MapsActivity.STARTINGDATE))
         EndDateAndTime.setText(intent.getStringExtra(MapsActivity.STARTINGDATE))
         Attendees.setText(intent.getLongExtra("Attendants",0).toString())
+        Location.setText(intent.getStringExtra("LOCATION"));
 
     }
 

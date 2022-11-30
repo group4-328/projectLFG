@@ -40,11 +40,11 @@
         <activity
             android:name=".UserInfoActivity"
             android:exported="false" />
-
-
         <activity
             android:name=".EventInfoActivity"
             android:exported="false" />
+
+           
 <!--        <activity-->
 <!--            android:name=".MapsActivity"-->
 <!--            android:exported="false"-->
