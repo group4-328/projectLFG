@@ -26,4 +26,8 @@ import androidx.core.content.ContextCompat
      fun popUp(context: Context, text: String){
          Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
      }
+
+     val CHAT_INDIVIDUAL = "chat_individual"
+     val CHAT_GROUP = "chat_group"
+     val MAIN_SHARE_PREF = "mainSharePreference"
 }

@@ -15,6 +15,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 
 class MainActivity : AppCompatActivity() {
     // To be used possibly with screen updates and login
@@ -55,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         authenticator = FirebaseAuth.getInstance()
         database  = Firebase.database;
         myref = database.reference;
+        storage = Firebase.storage;
 
         // UI init
         logoView = findViewById(R.id.mainMenuLogo)
@@ -82,11 +85,13 @@ class MainActivity : AppCompatActivity() {
 
                 // set currentUser information
                 myref.child("users").child(authenticator.currentUser!!.uid).get().addOnSuccessListener {
-                    currentUser = UserInformation(it.child("name").value.toString(), it.child("email").value.toString(), it.child("uid").value.toString(), it.child("uid").value.toString())
+                    currentUser = UserInformation(
+                        it.child("name").value.toString(),
+                        it.child("email").value.toString(),
+                        it.child("imageuri").value.toString(),
+                        it.child("uid").value.toString())
                     popUp(this, "Welcome back, " + it.child("name").value.toString())
-                    //println(authenticator.currentUser!!.uid)
-                    //println(currentUser!!.name)
-                    //println(currentUser!!.email)
+                    println(currentUser.toString())
                 }.addOnFailureListener {
 
                 }
@@ -101,6 +106,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
 
+        //storage
+        lateinit var storage: FirebaseStorage
+
         //authentication
         lateinit var authenticator: FirebaseAuth
 
@@ -110,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         //ref
         lateinit var myref : DatabaseReference
 
+        // current user
         var currentUser: UserInformation? = UserInformation()
     }
 

@@ -39,7 +39,6 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
         else if(v==configImageButton){
 //            this.supportFragmentManager.beginTransaction().replace(R.id.mainmenulayout,SettingPreferenceFragment())
 //                .addToBackStack(null).commit();
-
             val intent = Intent(this,UserPreferenceActivity::class.java)
             startActivity(intent);
         }
