@@ -38,8 +38,7 @@ class ContactAdapter(val context: Context, val userList: ArrayList<UserInformati
 
         if(currentContact.imageuri != null){
             try{
-                //val ref = storage.getReference("images/"+ currentUser!!.imageuri+".jpeg")
-                val ref = storage.getReference("images/"+ currentContact.name +".jpeg")
+                val ref = storage.getReference("images/"+ currentContact.imageuri )
                 val tempFile = File.createTempFile("tempLogo", "jpeg")
                 ref.getFile(tempFile).addOnSuccessListener {
 
@@ -47,8 +46,9 @@ class ContactAdapter(val context: Context, val userList: ArrayList<UserInformati
                     holder.image.setImageBitmap(img)
 
                 }.addOnFailureListener{
-                    println("fail to retrieve data")
-                    println(it)
+
+
+
                 }
             }catch(e: Exception){
                 println("error loading img source")

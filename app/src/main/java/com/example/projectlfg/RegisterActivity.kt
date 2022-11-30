@@ -102,7 +102,7 @@ class RegisterActivity : AppCompatActivity() {
                     
                     // store user profile
                     val uniqueid = UUID.randomUUID();
-                    val ref= storageRef.child("images/"+name);
+                    val ref= storageRef.child("images/"+ uniqueid);
                     val uploadTask = ref.putFile(imageUri!!);
 
                     // temporary replacement
