@@ -222,20 +222,18 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
                         addressString += address?.getAddressLine(i)
                     }
                 }
-                var eventInformation = authenticator.currentUser?.let {
-                    latLng?.let { it1 ->
-                        EventInformation(
-                            nameEditText.text.toString(),
-                            it,
-                            it1,
-                            addressString,
-                            startTime,
-                            endTime,
-                            capacityEditText.text.toString().toInt(),
-                            informationEditText.text.toString()
-                        )
-                    }
+                var eventInformation = latLng?.let { it1 ->
+                    EventInformation(
+                        nameEditText.text.toString(),
+                        it1,
+                        addressString,
+                        startTime,
+                        endTime,
+                        capacityEditText.text.toString().toInt(),
+                        informationEditText.text.toString()
+                    )
                 }
+
                 if (eventInformation != null) {
                     writeToDatabase(eventInformation)
                 }
