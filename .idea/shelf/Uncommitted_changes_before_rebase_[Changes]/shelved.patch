@@ -1,0 +1,69 @@
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    package=\"com.example.projectlfg\">\n\n    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />\n    <uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />\n\n    <application\n        android:allowBackup=\"true\"\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\n        android:fullBackupContent=\"@xml/backup_rules\"\n        android:icon=\"@mipmap/ic_launcher\"\n        android:label=\"@string/app_name\"\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\n        android:supportsRtl=\"true\"\n        android:theme=\"@style/Theme.ProjectLFG\"\n        tools:targetApi=\"31\">\n\n        <!--\n             TODO: Before you run your application, you need a Google Maps API key.\n\n             To get one, follow the directions here:\n\n                https://developers.google.com/maps/documentation/android-sdk/get-api-key\n\n             Once you have your API key (it starts with \"AIza\"), define a new property in your\n             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the\n             \"YOUR_API_KEY\" string in this file with \"${MAPS_API_KEY}\".\n        -->\n        <meta-data\n            android:name=\"com.google.android.geo.API_KEY\"\n            android:value=\"${MAPS_API_KEY}\" />\n\n        <activity\n            android:name=\".MapsActivity\"\n            android:exported=\"false\"\n            android:label=\"@string/title_activity_maps\" />\n        <activity\n            android:name=\".RegisterActivity\"\n            android:exported=\"false\"\n            android:label=\"@string/title_activity_maps\" />\n        <activity\n            android:name=\".LogInActivity\"\n            android:exported=\"false\" />\n        <activity\n            android:name=\".EventInfoActivity\"\n            android:exported=\"false\">\n        </activity>\n        <activity\n            android:name=\".UserHistoryActivity\"\n            android:exported=\"false\">\n        </activity>\n        <activity\n            android:name=\".UserPreferenceActivity\"\n            android:exported=\"false\">\n        </activity>\n        <activity\n            android:name=\".UserInfoActivity\"\n            android:exported=\"false\">\n        </activity>\n        <activity\n            android:name=\".MainActivity\"\n            android:exported=\"true\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n        </activity>\n        <activity\n            android:name=\".MainMenuActivity\"\n            android:exported=\"true\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n        </activity>\n\n\n\n\n\n\n    </application>\n\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 9cf284e50d8dc9efe8775e14271639ac647e1235)
++++ b/app/src/main/AndroidManifest.xml	(date 1669767601400)
+@@ -28,9 +28,7 @@
+              project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
+              "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
+         -->
+-        <meta-data
+-            android:name="com.google.android.geo.API_KEY"
+-            android:value="${MAPS_API_KEY}" />
++
+ 
+         <activity
+             android:name=".MapsActivity"
+@@ -77,7 +75,9 @@
+         </activity>
+ 
+ 
+-
++        <meta-data
++            android:name="com.google.android.geo.API_KEY"
++            android:value="AIzaSyClKdCeGdHfj9OVsx6mmDoxx5C2sun0TEA" />
+ 
+ 
+ 
+Index: app/src/main/java/com/example/projectlfg/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.projectlfg\n\nimport android.content.Intent\nimport androidx.appcompat.app.AppCompatActivity\nimport android.os.Bundle\n\nimport android.text.Layout\nimport android.text.TextUtils\nimport android.view.View\nimport android.widget.*\nimport com.example.projectlfg.Util.popUp\nimport com.example.projectlfg.databinding.ActivityMainBinding\nimport com.google.firebase.auth.FirebaseAuth\nimport com.google.firebase.database.DatabaseReference\nimport com.google.firebase.database.FirebaseDatabase\nimport com.google.firebase.database.ktx.database\nimport com.google.firebase.ktx.Firebase\n\nclass MainActivity : AppCompatActivity() {\n\n    private lateinit var emailTextEdit: EditText\n    private lateinit var passwordTextEdit: EditText\n    private lateinit var nameLayout: View\n    private lateinit var nameTextEdit: EditText\n    private lateinit var logoView: ImageView\n\n    private lateinit var loginButton: Button\n    private lateinit var registerButton: TextView\n\n    private lateinit var binding: ActivityMainBinding\n\n    //authentication\n    private lateinit var authenticator: FirebaseAuth\n\n    //database\n    private lateinit var database: FirebaseDatabase\n\n    //ref\n    private lateinit var myref: DatabaseReference\n\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n        binding = ActivityMainBinding.inflate(layoutInflater)\n        val view = binding.root\n        setContentView(view)\n\n\n        // get view\n        emailTextEdit = binding.emailtextview\n        passwordTextEdit = binding.passwordtextview\n        loginButton = binding.LoginButton\n        registerButton = binding.registerlink\n        nameLayout = binding.layout0\n        nameTextEdit = binding.nametextview\n\n\n        // firebase init\n        authenticator = FirebaseAuth.getInstance()\n        database = Firebase.database;\n        myref = database.reference;\n\n        // UI init\n        logoView = findViewById(R.id.mainMenuLogo)\n        logoView.setImageResource(R.drawable.logo)\n        nameLayout.visibility = View.GONE\n\n        loginButton.setOnClickListener {\n            if (!TextUtils.isEmpty(emailTextEdit.text.toString()) && !TextUtils.isEmpty(\n                    passwordTextEdit.text.toString()\n                )\n            ) {\n                logIn(emailTextEdit.text.toString(), passwordTextEdit.text.toString())\n            } else {\n                popUp(this, \"please fill in user information\")\n            }\n        }\n\n        registerButton.setOnClickListener {\n            // Open register activity\n            val intent = Intent(this, RegisterActivity::class.java)\n            startActivity(intent)\n        }\n    }\n\n    private fun logIn(email: String, password: String) {\n        authenticator.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {\n            if (it.isSuccessful) {\n                // load main menu\n                val startMenu = Intent(this, MainMenuActivity::class.java)\n                startActivity(startMenu)\n                finish();\n            } else {\n                popUp(this, \"log in fail, please try again\")\n            }\n        }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/projectlfg/MainActivity.kt b/app/src/main/java/com/example/projectlfg/MainActivity.kt
+--- a/app/src/main/java/com/example/projectlfg/MainActivity.kt	(revision 9cf284e50d8dc9efe8775e14271639ac647e1235)
++++ b/app/src/main/java/com/example/projectlfg/MainActivity.kt	(date 1669767724743)
+@@ -40,6 +40,7 @@
+ 
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
++
+         binding = ActivityMainBinding.inflate(layoutInflater)
+         val view = binding.root
+         setContentView(view)
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\n    id 'com.android.application'\n    id 'org.jetbrains.kotlin.android'\n    id 'kotlin-android'\n    id 'kotlin-kapt' //XD added\n\n    //for firebase\n    // Add the Google services Gradle plugin\n    id 'com.google.gms.google-services'\n}\n\nandroid {\n    compileSdk 33\n    defaultConfig {\n        applicationId \"com.example.projectlfg\"\n        minSdk 26\n        targetSdk 32\n        versionCode 1\n        versionName \"1.0\"\n\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\n    }\n\n    //enable view binding\n    buildFeatures{\n        viewBinding true\n    }\n\n    buildTypes {\n        release {\n            minifyEnabled false\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\n        }\n    }\n    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_1_8\n        targetCompatibility JavaVersion.VERSION_1_8\n    }\n    kotlinOptions {\n        jvmTarget = '1.8'\n    }\n\n    buildFeatures {\n        viewBinding = true\n    }\n}\n\ndependencies {\n    implementation 'androidx.preference:preference:1.2.0'\n    implementation 'androidx.core:core-ktx:1.9.0'\n    implementation 'androidx.appcompat:appcompat:1.5.1'\n    implementation 'com.google.android.material:material:1.7.0'\n    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'\n    implementation 'com.google.firebase:firebase-auth:21.1.0'\n    implementation 'com.google.firebase:firebase-database-ktx:20.1.0'\n    implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'\n    testImplementation 'junit:junit:4.13.2'\n    androidTestImplementation 'androidx.test.ext:junit:1.1.3'\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'\n\n    // Coroutine components\n    implementation \"org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.31\"\n    implementation \"org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1\"\n\n    // Lifecycle components\n    implementation \"androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1\"\n    implementation \"androidx.lifecycle:lifecycle-runtime-ktx:2.5.1\"\n    implementation \"androidx.lifecycle:lifecycle-livedata-ktx:2.5.1\"\n    implementation \"androidx.lifecycle:lifecycle-common-java8:2.5.1\"\n\n    // Room components\n    implementation \"androidx.room:room-ktx:2.4.3\"\n    kapt \"androidx.room:room-compiler:2.4.3\"\n    androidTestImplementation \"androidx.room:room-testing:2.4.3\"\n    //annotationProcessor \"androidx.room:room-compiler:2.4.3\"\n\n\n    // Import the Firebase BoM\n    implementation platform('com.google.firebase:firebase-bom:31.1.0')\n\n    // When using the BoM, don't specify versions in Firebase dependencies\n    implementation 'com.google.firebase:firebase-analytics-ktx'\n\n    implementation 'com.google.firebase:firebase-database-ktx'\n    implementation 'com.firebaseui:firebase-ui-storage:7.2.0'\n    implementation 'com.google.firebase:firebase-storage-ktx'\n\n    implementation 'com.google.android.gms:play-services-maps:18.1.0'\n    implementation 'com.google.android.gms:play-services-location:16.0.0'\n    // TODO: Add the dependencies for Firebase products you want to use\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision 9cf284e50d8dc9efe8775e14271639ac647e1235)
++++ b/app/build.gradle	(date 1669767601405)
+@@ -6,7 +6,7 @@
+ 
+     //for firebase
+     // Add the Google services Gradle plugin
+-    id 'com.google.gms.google-services'
++//    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+ }
+ 
+ android {

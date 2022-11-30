@@ -63,6 +63,7 @@
         android:paddingLeft = "10dp"
         android:inputType="text"
         android:text="2022/11/25 13:00"
+        android:id="@+id/enddate"
         android:editable="false"
         android:layout_height="50dp">
     </EditText>
