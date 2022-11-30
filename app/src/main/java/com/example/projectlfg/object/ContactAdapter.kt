@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.projectlfg.Util.CHAT_INDIVIDUAL
 
 
 class ContactAdapter(val context: Context, val userList: ArrayList<UserInformation>): RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
@@ -35,6 +36,7 @@ class ContactAdapter(val context: Context, val userList: ArrayList<UserInformati
 
         holder.itemView.setOnClickListener{
             val intent = Intent(context, ChatActivity::class.java)
+            intent.putExtra("type", CHAT_INDIVIDUAL)
             intent.putExtra("name", currentContact.name)
             intent.putExtra("receiver", currentContact.uid)
             context.startActivity(intent)
