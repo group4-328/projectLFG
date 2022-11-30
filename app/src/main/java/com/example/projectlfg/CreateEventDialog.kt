@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -40,10 +41,7 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
         val dialogKey = "Dialog"
     }
 
-    private lateinit var authenticator: FirebaseAuth;
     private lateinit var myref : DatabaseReference;
-    private lateinit var storage: FirebaseStorage;
-    private lateinit var storageRef : StorageReference
 
     private lateinit var nameEditText: EditText
     private lateinit var startDateText: TextView
@@ -70,11 +68,6 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         lateinit var dialog: Dialog
         lateinit var view: View
-
-        storage = Firebase.storage;
-        storageRef = storage.reference
-        authenticator = FirebaseAuth.getInstance()
-        myref = Firebase.database.reference
 
         // build dialog
         var dialogTitle = arguments?.getString(dialogTitleKey)
@@ -227,8 +220,8 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
                         nameEditText.text.toString(),
                         it1,
                         addressString,
-                        startTime,
-                        endTime,
+                        startTime.timeInMillis,
+                        endTime.timeInMillis,
                         capacityEditText.text.toString().toInt(),
                         informationEditText.text.toString()
                     )
@@ -250,7 +243,8 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
 
     fun writeToDatabase(eventInfo: EventInformation) {
         val uniqueid = UUID.randomUUID();
-        myref.child("events").child(uniqueid.toString()).setValue(eventInfo)
+        myref = FirebaseDatabase.getInstance().reference
+        myref.child("events").push().setValue(eventInfo)
     }
 
     fun setAddressText() {

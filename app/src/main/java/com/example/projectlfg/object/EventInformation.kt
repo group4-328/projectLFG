@@ -4,7 +4,12 @@ import android.icu.util.Calendar
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseUser
 
-class EventInformation(name: String, latLng: LatLng, address: String,
-                       startTime: Calendar, endTime: Calendar, capacity: Int, info: String) {
-
-}
+data class EventInformation(
+    var name: String,
+    var latLng: LatLng,
+    var address: String,
+    val startTime: Long,
+    var endTime: Long,
+    var capacity: Int,
+    var info: String
+    ): java.io.Serializable
