@@ -102,7 +102,7 @@ class RegisterActivity : AppCompatActivity() {
                     
                     // store user profile
                     val uniqueid = UUID.randomUUID();
-                    val ref= storageRef.child("images/"+uniqueid);
+                    val ref= storageRef.child("images/"+name);
                     val uploadTask = ref.putFile(imageUri!!);
 
                     // temporary replacement
@@ -124,8 +124,7 @@ class RegisterActivity : AppCompatActivity() {
 
                             val downloadUri= it.result;
                             val user = authenticator.currentUser;
-                            myref.child("users").child(user!!.uid).child("imageuri").setValue(userinfo);
-
+                            myref.child("users").child(user!!.uid).child("imageuri").setValue(uniqueid.toString())
                             finish()
                         }
 

@@ -50,10 +50,10 @@ class ContactListActivity : AppCompatActivity() {
                         val name = users.child("name").value.toString()
                         val email = users.child("email").value.toString()
                         val uid = users.child("uid").value.toString()
+                        val imageID = users.child("imageuri").value.toString()
 
-                        println(name + " " + email)
 
-                        contactList.add(UserInformation(name, email, "", uid))
+                        contactList.add(UserInformation(name, email, imageID, uid))
                     }
 
                 }

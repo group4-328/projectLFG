@@ -24,4 +24,5 @@ import androidx.core.content.ContextCompat
 
      val CHAT_INDIVIDUAL = "chat_individual"
      val CHAT_GROUP = "chat_group"
+     val MAIN_SHARE_PREF = "mainSharePreference"
 }

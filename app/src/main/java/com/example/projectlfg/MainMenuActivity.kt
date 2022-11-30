@@ -36,7 +36,7 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
 
         when(v){
             contactListImageButton-> startActivity(Intent(this, ContactListActivity::class.java))
-            else->println("click")
+            else-> println()
         }
     }
 

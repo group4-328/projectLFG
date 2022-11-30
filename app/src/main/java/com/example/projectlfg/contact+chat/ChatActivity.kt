@@ -64,12 +64,10 @@ class ChatActivity : AppCompatActivity() {
                             val text = msg.child("msg").getValue()
                             val sender = msg.child("sender").getValue()
 
-                            println("received msg = " + text)
                             msgList.add(Message(text.toString(), sender.toString()))
                         }
 
                         adapter.notifyDataSetChanged()
-                        println(" msg updated")
                     }
 
                     override fun onCancelled(error: DatabaseError) {
@@ -85,7 +83,6 @@ class ChatActivity : AppCompatActivity() {
                     .setValue(message).addOnCompleteListener {
                         myref.child("chatroom").child(receiveRoomID).child("msgs").push()
                             .setValue(message)
-                        println("msg pushed")
                     }
 
                 messageBox.setText("")

@@ -38,8 +38,6 @@ class MsgAdapter(val context: Context, val msgList: ArrayList<Message>): Recycle
 
         lateinit var view: View
 
-        println("creating view holder")
-
         // if it's a sent msg
         if(viewType == 1){
             view = LayoutInflater.from(context).inflate(R.layout.sentmsg, parent, false)
@@ -54,8 +52,6 @@ class MsgAdapter(val context: Context, val msgList: ArrayList<Message>): Recycle
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         val currentTxt = msgList[position]
-
-        println("binding view holder")
 
         // if it's a sent msg
         if(holder.javaClass == SentMsgHolder::class.java){
