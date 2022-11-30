@@ -1,5 +1,6 @@
 package com.example.projectlfg
 
+import android.annotation.SuppressLint
 import android.location.Criteria
 import android.location.Location
 import android.location.LocationListener
@@ -70,7 +71,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             createEventDialog.show(supportFragmentManager, "createEvent")
         })
     }
-
+    @SuppressLint("MissingPermission")
     fun initLocationManager() {
         try {
             locationManager = getSystemService(LOCATION_SERVICE) as LocationManager

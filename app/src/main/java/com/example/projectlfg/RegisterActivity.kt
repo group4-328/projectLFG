@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import com.example.projectlfg.Util.popUp
 import com.example.projectlfg.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -40,6 +41,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var myref : DatabaseReference;
     private lateinit var storage: FirebaseStorage;
     private lateinit var storageRef : StorageReference
+    private lateinit var ImgClickButton: Button;
 
     private var imageUri: Uri?=null;
     private lateinit var ImageGalleryIntent : ActivityResultLauncher<Intent>
@@ -56,6 +58,12 @@ class RegisterActivity : AppCompatActivity() {
         PasswordEditText = binding.RegisterPassword
         RegisterButton = binding.RegisterButton
         UserImageView = binding.UserImageView;
+        ImgClickButton = binding.RegisterImgButton;
+
+        ImgClickButton.setOnClickListener {
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            ImageGalleryIntent.launch(gallery);
+        }
 
 
         storage = Firebase.storage;
@@ -65,10 +73,10 @@ class RegisterActivity : AppCompatActivity() {
 
         Util.checkPermissions(this);
 
-
-        UserImageView.setOnClickListener {
-            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            ImageGalleryIntent.launch(gallery);
+        if(savedInstanceState != null){
+            if(savedInstanceState.containsKey("imguri")){
+                imageUri = savedInstanceState.getString("imguri")!!.toUri();
+            }
         }
 
         ImageGalleryIntent = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),{
@@ -83,12 +91,17 @@ class RegisterActivity : AppCompatActivity() {
             val EmailNotEmpty = TextUtils.isEmpty(EmailEditText.text.toString())
             val PasswordNotEmpty = TextUtils.isEmpty(PasswordEditText.text.toString())
 
-            if(!NameNotEmpty && !EmailNotEmpty && !PasswordNotEmpty){
+            if(!NameNotEmpty && !EmailNotEmpty && !PasswordNotEmpty && imageUri != null){
                 signUp(NameEditText.text.toString(),EmailEditText.text.toString(),PasswordEditText.text.toString())
             }else{
                 popUp(this, "please fill in user information")
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("imguri",imageUri.toString());
     }
 
 
@@ -125,6 +138,9 @@ class RegisterActivity : AppCompatActivity() {
                         Toast.makeText(this,it.localizedMessage, Toast.LENGTH_LONG).show()
                     }
 
+                    val intent= Intent(this,MainMenuActivity::class.java);
+                    startActivity(intent);
+                    finish();
 
                 } else {
                     // If sign up fails

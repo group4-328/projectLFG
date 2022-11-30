@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:id="@+id/emailtextview"
             android:background="@drawable/rectanglebox"
-            android:maxLines="1"
+            android:singleLine="true"
             android:paddingLeft = "10dp"
             android:inputType="textEmailAddress"
             android:layout_height="35dp">
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:background="@drawable/rectanglebox"
             android:id="@+id/passwordtextview"
-            android:maxLines="1"
+            android:singleLine="true"
             android:paddingLeft = "10dp"
             android:inputType="textPassword"
             android:layout_height="35dp">

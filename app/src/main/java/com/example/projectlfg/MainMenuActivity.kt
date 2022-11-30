@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
-import com.example.projectlfg.Util.popUp
 
 class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
 
@@ -38,10 +36,11 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
 
         }else if(v==configImageButton){
 
-//            val intent = Intent(this,UserInfoFragment::class)
-//            startActivity(intent);
-            this.supportFragmentManager.beginTransaction().replace(R.id.mainmenulayout,SettingPreferenceFragment())
-                .addToBackStack(null).commit();
+//            this.supportFragmentManager.beginTransaction().replace(R.id.mainmenulayout,SettingPreferenceFragment())
+//                .addToBackStack(null).commit();
+
+            val intent = Intent(this,UserPreferenceActivity::class.java)
+            startActivity(intent);
         }
         else if (v == findActivityImageButton) {
             val intent = Intent(this, MapsActivity::class.java)
