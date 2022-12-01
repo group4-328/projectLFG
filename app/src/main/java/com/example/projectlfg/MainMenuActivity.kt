@@ -40,6 +40,7 @@ class MainMenuActivity : AppCompatActivity(), View.OnClickListener{
             findActivityImageButton->startActivity(Intent(this, MapsActivity::class.java))
             scheduledActivityImageButton->startActivity(Intent(this,UserHistoryActivity::class.java))
             configImageButton->startActivity(Intent(this,UserPreferenceActivity::class.java))
+            contactListImageButton->startActivity(Intent(this,ContactListActivity::class.java))
         }
     }
 

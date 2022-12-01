@@ -18,6 +18,9 @@ import com.example.projectlfg.databinding.ActivityEventsHistoryBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 interface FirebaseCallBackList{
     fun onCallBack(list:List<EventsInformation>)
@@ -72,11 +75,13 @@ class UserHistoryActivity:AppCompatActivity() {
         listview = view.findViewById(R.id.EventsHistoryRecyclerView)
         val db = FirebaseDatabase.getInstance().reference
 
-        readFromDB(object: FirebaseCallBackList{
-            override fun onCallBack(list: List<EventsInformation>) {
-                listview.adapter = CustomAdapter(list);
-            }
-        },db,curruserid);
+        CoroutineScope(Dispatchers.IO).launch{
+            readFromDB(object: FirebaseCallBackList{
+                override fun onCallBack(list: List<EventsInformation>) {
+                    listview.adapter = CustomAdapter(list);
+                }
+            },db,curruserid);
+        }
         setContentView(view);
     }
 }

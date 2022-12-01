@@ -136,25 +136,50 @@
         <TextView
             android:layout_height="match_parent"
             android:layout_width="100dp"
-            android:text="Rate it:"
+            android:text="Total Rating:"
             android:gravity="center"
             android:textSize="20sp"
             ></TextView>
         <RatingBar
-            android:id="@+id/ratingbar"
+            android:id="@+id/totalratingbar"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:stepSize="1"
+            android:numStars="4"
+            android:isIndicator="true"
+            android:theme="@style/Widget.AppCompat.RatingBar"
+            ></RatingBar>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:text="My Rating:"
+            android:gravity="center"
+            android:textSize="20sp"
+            ></TextView>
+        <RatingBar
+            android:id="@+id/myratingbar"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:stepSize="1"
             android:numStars="4"
             android:theme="@style/Widget.AppCompat.RatingBar"
             ></RatingBar>
+
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
         android:gravity="center"
         >
@@ -166,8 +191,8 @@
             >
         </Button>
         <Button
-            android:id="@+id/SaveEvent"
-            android:text="Save Event"
+            android:id="@+id/CommentEvent"
+            android:text="Comment"
             android:layout_height="match_parent"
             android:layout_width="150dp"
             android:layout_marginLeft="10dp"

@@ -1,12 +1,8 @@
 package com.example.projectlfg
 
 import CommentInformation
-import DBEventsInformation
 import EventsInformation
-import android.content.ContentValues
-import android.content.Intent
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.projectlfg.databinding.ActivityEventInfoBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -33,19 +30,24 @@ class EventInfoActivity:AppCompatActivity() {
     private lateinit var Attendees:EditText;
     private lateinit var Location:EditText;
 
+    private lateinit var CommentButton:Button;
     private lateinit var SignUpButton: Button;
-
+    private lateinit var myratingbar:RatingBar;
+    private lateinit var totalratingbar:RatingBar
     private lateinit var db:DatabaseReference
 
     private  var EventsIsAdded = false;
     private lateinit var CommentView: ListView;
+    private lateinit var curruserid:String;
+
+
     private lateinit var binding:ActivityEventInfoBinding;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEventInfoBinding.inflate(layoutInflater);
         val view = binding.root;
         setContentView(view);
-        val currid = FirebaseAuth.getInstance().currentUser!!.uid.toString()
+        curruserid = FirebaseAuth.getInstance().currentUser!!.uid.toString()
 
 
         EventName = binding.EventName;
@@ -54,93 +56,119 @@ class EventInfoActivity:AppCompatActivity() {
         Attendees = binding.Attendees;
         Location = binding.Location;
         SignUpButton = binding.SignUpEvent;
+        myratingbar = binding.myratingbar;
+        totalratingbar = binding.totalratingbar
+        CommentButton = binding.CommentEvent
+
+        exists();
+        getMyRatings()
+        getTotalRatings()
+
+        myratingbar.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
+            val key = intent.getStringExtra("key")
+            val db = FirebaseDatabase.getInstance().reference.child("events1").child(key!!).child("ratings")
+            val curruser = FirebaseAuth.getInstance().currentUser!!.uid.toString()
+            db.child(curruser).setValue(rating);
+        }
+
+
+        CommentButton.setOnClickListener {
+            val createcommentdialog = CommentDialogFragment();
+            createcommentdialog.show(supportFragmentManager,"create comment")
+        }
+
 
         CommentView = view.findViewById(R.id.commentslistview)
         var tmplist= ArrayList<CommentInformation>()
-        tmplist.add(CommentInformation(creator = "dd",date="dd",info="dd", creatorid = "dd"))
+        tmplist.add(CommentInformation(creator = "dd", date ="dd", comments = "dd", creatorid = "dd",rating=0.0f))
         val adapter = CommentAdapter(tmplist);
         CommentView.adapter = adapter
 
-        exists(object:SetButton{
-            override fun IfExistsCancelbutton(check: Boolean,id:String) {
-                if(!check){
-                    SignUpButton.setText("Sign Up")
-                    SignUpButton.setOnClickListener {
-                        addToDatabase("tmpevent")
-                        SignUpButton.setText("Delete")
-                        SignUpButton.setOnClickListener {
-//                        addToDatabase("tmpevent")
-                            SignUpButton.setText("Sign Up")
-                            val db = FirebaseDatabase.getInstance().reference.child("users").child(currid).child("events").child(id).removeValue()
-                        }
-                    }
-
-
-
-                }else{
-                    SignUpButton.setText("Delete")
-                    SignUpButton.setOnClickListener {
-//                        addToDatabase("tmpevent")
-                        SignUpButton.setText("Sign Up")
-                        val db = FirebaseDatabase.getInstance().reference.child("users").child(currid).child("events").child(id).removeValue()
-                        DeleteFromDb()
-                    }
-                }
-            }
-
-        })
 
         db = FirebaseDatabase.getInstance().reference;
 
-//        val info = intent.getSerializableExtra(MapsActivity.INFO) as DBEventsInformation;
-//        EventName.setText(info.name)
         EventName.setText(intent.getStringExtra(MapsActivity.NAME));
         DateAndTime.setText(intent.getStringExtra(MapsActivity.STARTINGDATE))
         EndDateAndTime.setText(intent.getStringExtra(MapsActivity.STARTINGDATE))
         Attendees.setText(intent.getLongExtra("Attendants",0).toString())
         Location.setText(intent.getStringExtra("LOCATION"));
-
     }
 
-    fun exists(setButton: SetButton){
-        val currid = FirebaseAuth.getInstance().currentUser!!.uid;
-        val db = FirebaseDatabase.getInstance().reference.child("users").child(currid).child("events")
-        db.get().addOnSuccessListener {
-            var tmpcheck = false;
-            if(it.value != null){
-                val data = it.value as HashMap<String,String>
-                if(data != null){
+    fun getMyRatings(){
+        GlobalScope.launch {
+            val keystr = intent.getStringExtra("key")
+            val tmpdb = FirebaseDatabase.getInstance().reference.child("events1").child(keystr!!).child("ratings").child(curruserid)
+            tmpdb.get().addOnSuccessListener {
+                if(it.value != null){
+                    val data = it.value as Long;
+                    myratingbar.rating = data.toFloat();
+                }
+            }
+        }
+    }
+
+    fun getTotalRatings(){
+        GlobalScope.launch{
+            val keystr = intent.getStringExtra("key");
+            val tmpdb = FirebaseDatabase.getInstance().reference.child("events1").child(keystr!!).child("ratings")
+            tmpdb.get().addOnSuccessListener {
+                if(it.value!=null){
+                    val data = it.value as HashMap<String,Long>;
+                    var total  = 0.0;
+                    var people = 0;
                     for((key,value) in data){
-                        val info = data.get(key);
-                        if(info == intent.getStringExtra("key")){
-                            tmpcheck = true;
-                            setButton.IfExistsCancelbutton(true,key);
-                            break;
+                        val num = value.toFloat();
+                        total = total+num;
+                        people+=1;
+                    }
+                    totalratingbar.rating = (total/people).toFloat();
+                }
+            }
+        }
+    }
+
+    fun exists(){
+
+        GlobalScope.launch{
+
+            val checklistener = object:ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists() && snapshot.hasChild("people")){
+                        val data = snapshot.child("people")
+
+                        if(data.hasChild(curruserid)){
+                            SignUpButton.setText("Remove")
+                            val keystr = intent.getStringExtra("key")
+                            SignUpButton.setOnClickListener {
+                                FirebaseDatabase.getInstance().reference.child("events1").child(keystr!!).
+                                child("people").child(curruserid).removeValue()
+                                val userevents =FirebaseDatabase.getInstance().reference.child("users").
+                                child(curruserid).child("events").child(keystr!!).removeValue()
+                            }
+                        }else{
+                            SignUpButton.setText("Sign Up")
+                            SignUpButton.setOnClickListener {
+                                addToDatabase()
+                            }
+                        }
+                    }else{
+                        SignUpButton.setText("Sign Up")
+                        SignUpButton.setOnClickListener {
+                            addToDatabase()
                         }
                     }
-                    if(!tmpcheck){
-                        setButton.IfExistsCancelbutton(false,"");
-                    }
                 }
-            }else{
-                setButton.IfExistsCancelbutton(false,"");
+
+                override fun onCancelled(error: DatabaseError) {
+                }
             }
-
-        }
-
-
-    }
-
-
-    fun DeleteFromDb(){
-        SignUpButton.setText("Sign Up")
-        SignUpButton.setOnClickListener {
-            addToDatabase("tmpevent")
+            val tmpdb = FirebaseDatabase.getInstance().reference
+            val keystr = intent.getStringExtra("key")
+            tmpdb.child("events1").child(keystr!!).addValueEventListener(checklistener);
         }
     }
 
-
-    fun addToDatabase(eventid:String){
+    fun addToDatabase(){
         val curruser = FirebaseAuth.getInstance().currentUser;
         if(curruser != null){
             val userid = curruser.uid;
@@ -152,17 +180,12 @@ class EventInfoActivity:AppCompatActivity() {
             val eventinfo = EventsInformation(name=eventname,startingdate=startingdate,
                 endtime = enddate, attendess = attendess,location=locationstr)
             val randomid = UUID.randomUUID().toString()
-            db.child("users").child(userid).child("events").child(randomid).setValue(intent.getStringExtra("key"));
-            SignUpButton.setOnClickListener {
-                SignUpButton.setText("Delete")
-                val db = FirebaseDatabase.getInstance().reference.child("users").child(userid).child("events").child(randomid).removeValue()
-            }
+            val keystr = intent.getStringExtra("key")
+            db.child("users").child(userid).child("events").child(keystr!!).setValue(intent.getStringExtra("key"));
+            db.child("events1").child(keystr!!).child("people").child(curruserid).setValue(curruserid)
         }
     }
 
-    fun addCalendarEvent(view: View){
-
-    }
 }
 
 class CommentAdapter(mlist:ArrayList<CommentInformation>):BaseAdapter(){

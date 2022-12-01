@@ -1,7 +1,8 @@
 
 data class CommentInformation(
-    var creator: String,
+    var creator: String="",
     var date:String,
-    var info:String,
-    var creatorid:String
+    var comments:String,
+    var creatorid:String,
+    var rating: Float
 )

@@ -8,8 +8,10 @@ import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
+import androidx.lifecycle.MutableLiveData
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -19,7 +21,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.projectlfg.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.model.Marker
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 
 interface SetMarkers{
     fun SetMarkersOnMap(mList:List<DBEventsInformation>);
@@ -45,33 +52,51 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private var givenLocation = false
     private var MarkerHashMap = HashMap<String,DBEventsInformation>();
 
-    fun getAllMarkers(setMarkers: SetMarkers){
-        val db = FirebaseDatabase.getInstance().reference.child("events1")
-        var eventsarr = ArrayList<DBEventsInformation>();
-        db.get().addOnSuccessListener {
-            if(it.value != null){
-                val data = it.value as HashMap<String,*>
-                for((key,value) in data){
-                    val childvalues= data.get(key) as HashMap<String,*>
-                    val name:String = childvalues.get("name") as String
-                    val startingdate = childvalues.get("startingdate") as String
-                    val location = childvalues.get("location") as String
-                    val attendants = childvalues.get("attendess")  as Long;
-                    val creator = childvalues.get("creator") as String
-                    val info = childvalues.get("information") as String
-                    val latlng = childvalues.get("latLng") as HashMap<String,Float>;
-                    val longtitude = latlng.get("longitude") as Double;
-                    val latitude = latlng.get("latitude") as Double;
-                    val tmplatlng = LatLng(latitude,longtitude);
-                    eventsarr.add(DBEventsInformation(
-                        name =name, startingdate = startingdate, attendess = attendants
-                        ,
-                        location = location, latLng = tmplatlng, information =  info,
-                        creator =creator,id=key))
-                }
-                setMarkers.SetMarkersOnMap(eventsarr)
-            }
 
+
+
+
+
+    fun listenUpdates(){
+        GlobalScope.launch {
+            val postlistener = object:ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    var eventsarr = ArrayList<DBEventsInformation>();
+                    if(snapshot.exists() ){
+                        val data = snapshot.value as HashMap<String,*>;
+                        Log.d("data",data.toString());
+                        for((key,value) in data){
+                            val tmpevent = value as HashMap<String,*>;
+                            val childvalues= data.get(key) as HashMap<String,*>
+                            val name:String = childvalues.get("name") as String
+                            val startingdate = childvalues.get("startingdate") as String
+                            val location = childvalues.get("location") as String
+                            val attendants = childvalues.get("attendess")  as Long;
+                            val creator = childvalues.get("creator") as String
+                            val info = childvalues.get("information") as String
+                            val latlng = childvalues.get("latLng") as HashMap<String,Float>;
+                            val longtitude = latlng.get("longitude") as Double;
+                            val latitude = latlng.get("latitude") as Double;
+                            val tmplatlng = LatLng(latitude,longtitude);
+                            val dbhashmap= DBEventsInformation(
+                                name =name, startingdate = startingdate, attendess = attendants
+                                ,
+                                location = location, latLng = tmplatlng, information =  info,
+                                creator =creator,id=key)
+                            mMap.addMarker(MarkerOptions().position(tmplatlng).title(key))
+                            MarkerHashMap.put(key,dbhashmap)
+
+                        }
+
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+            }
+            val EventsDB = FirebaseDatabase.getInstance().reference.child("events1")
+            EventsDB.addValueEventListener(postlistener)
         }
     }
 
@@ -88,6 +113,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        listenUpdates()
+
         createEventButton = findViewById(R.id.create_event_map_button)
     }
 
@@ -100,28 +127,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
+
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         if (!givenLocation) {
             initLocationManager()
         }
 
-        getAllMarkers(object:SetMarkers{
-            override fun SetMarkersOnMap(mList:List<DBEventsInformation>) {
-                mList.forEach {
-                    val tmpmarker = MarkerOptions().position(it.latLng!!).title(it.name).snippet(it.name)
-                    MarkerHashMap.put(it.name!!,it);
-                    mMap.addMarker(tmpmarker)
-                }
-            }
+        listenUpdates()
 
-        })
         mMap.setOnMarkerClickListener(object : GoogleMap.OnMarkerClickListener{
             override fun onMarkerClick(p0: Marker): Boolean {
                 val name = p0.title
                 val info = MarkerHashMap.get(name);
                 val intent = Intent(applicationContext,EventInfoActivity::class.java);
-//                intent.putExtra(INFO,info);
                 intent.putExtra(NAME,info!!.name);
                 intent.putExtra(LOCATION,info.location);
                 intent.putExtra(STARTINGDATE,info.startingdate);
@@ -131,7 +152,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 startActivity(intent);
                 return true;
             }
-
         })
 
         mMap.setOnMapLongClickListener(this)

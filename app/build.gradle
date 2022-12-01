@@ -90,6 +90,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx'
 
     implementation 'com.google.firebase:firebase-storage-ktx'
+    implementation("com.android.volley:volley:1.2.1")
+
+    implementation 'com.google.android.libraries.places:places:2.6.0'
 
 
     // TODO: Add the dependencies for Firebase products you want to use
