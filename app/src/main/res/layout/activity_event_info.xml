@@ -167,11 +167,25 @@
         <RatingBar
             android:id="@+id/myratingbar"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:stepSize="1"
             android:numStars="4"
             android:theme="@style/Widget.AppCompat.RatingBar"
             ></RatingBar>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        >
+        <Button
+            android:layout_height="match_parent"
+            android:layout_width="300dp"
+            android:text="View Comments"
+            android:id="@+id/goviewcomments"
+            ></Button>
 
     </LinearLayout>
 
@@ -200,28 +214,7 @@
         </Button>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Comments"
-            android:gravity="center"
-            android:textSize="20sp"
-            >
-        </TextView>
 
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/commentslistview"
-            >
-
-        </ListView>
-    </LinearLayout>
 
 
     </LinearLayout>

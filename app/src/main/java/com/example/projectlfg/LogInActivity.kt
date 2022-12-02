@@ -1,6 +1,6 @@
 package com.example.projectlfg
 
-import EventsInformation
+//import EventsInformation
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences

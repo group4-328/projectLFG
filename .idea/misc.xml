@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/rectanglebox.xml" value="0.1475" />
         <entry key="app/src/main/res/layout/activity_add_event.xml" value="0.18931159420289856" />
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.3375" />
+        <entry key="app/src/main/res/layout/activity_comment_listview.xml" value="0.33645833333333336" />
         <entry key="app/src/main/res/layout/activity_contact_list.xml" value="0.3375" />
         <entry key="app/src/main/res/layout/activity_event_history_row.xml" value="0.18931159420289856" />
         <entry key="app/src/main/res/layout/activity_event_info.xml" value="0.18931159420289856" />

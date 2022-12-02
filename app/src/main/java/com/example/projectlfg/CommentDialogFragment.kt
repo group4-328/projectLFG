@@ -12,9 +12,13 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import androidx.core.view.get
 import androidx.fragment.app.DialogFragment
 import com.example.projectlfg.databinding.ActivityLeaveCommentBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class CommentDialogFragment:DialogFragment() , DialogInterface.OnClickListener{
 
@@ -39,11 +43,25 @@ class CommentDialogFragment:DialogFragment() , DialogInterface.OnClickListener{
 
         comments = view.findViewById(R.id.comment_area)
 
+        val curruser = FirebaseAuth.getInstance().currentUser!!.uid
+
         savebutton = view.findViewById(R.id.savebutton)
         savebutton.setOnClickListener {
             val curruser = FirebaseAuth.getInstance().currentUser!!.uid
-//            val comment = CommentInformation(creatorid = curruser, date = ,
-//                comments = comments.text.toString(),rating=0.0f)
+            val eventid = requireArguments().getString("key");
+            val ratingnum = requireArguments().getFloat("rating")
+            val db = FirebaseDatabase.getInstance().reference.child("events1").child(eventid!!).child("comments")
+            val titletext = titlespinner.selectedItem.toString()
+            val goagain = GoAgain.selectedItem.toString();
+
+            val current =LocalDateTime.now();
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            val formatted = current.format(formatter);
+
+            val comment = CommentInformation(creatorid = curruser, comments = comments.text.toString(),
+                rating = ratingnum,date="$formatted", titletext = titletext, goagainstr = goagain)
+//            db.push().setValue()
+            db.push().setValue(comment);
             dismiss()
         }
 

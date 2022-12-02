@@ -1,6 +1,7 @@
 package com.example.projectlfg
 
-import EventsInformation
+//import EventsInformation
+import DBEventsInformation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -23,7 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 interface FirebaseCallBackList{
-    fun onCallBack(list:List<EventsInformation>)
+    fun onCallBack(list:List<DBEventsInformation>)
 
 }
 
@@ -37,7 +38,7 @@ class UserHistoryActivity:AppCompatActivity() {
     fun readFromDB(firebaseCallBackList: FirebaseCallBackList,db:DatabaseReference,curruserid:String){
 
         db.child("users").child(curruserid).child("events").get().addOnSuccessListener {
-            val eventList : ArrayList<EventsInformation> = ArrayList();
+            val eventList : ArrayList<DBEventsInformation> = ArrayList();
             if(it.value == null) {
 
             }else{
@@ -53,8 +54,8 @@ class UserHistoryActivity:AppCompatActivity() {
                             val location = tmp.get("location") as String;
                             val attendess = tmp.get("attendess") as Long;
                             val id = tmp.get("id") as String;
-                            eventList.add(EventsInformation(name=name,startingdate=startindate,
-                                endtime = startindate,attendess=attendess,location=location, id = id));
+                            eventList.add(DBEventsInformation(name=name,startingdate=startindate,
+                                attendess=attendess,location=location, id = id));
                         }
                         firebaseCallBackList.onCallBack(eventList);
                     }
@@ -77,7 +78,7 @@ class UserHistoryActivity:AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch{
             readFromDB(object: FirebaseCallBackList{
-                override fun onCallBack(list: List<EventsInformation>) {
+                override fun onCallBack(list: List<DBEventsInformation>) {
                     listview.adapter = CustomAdapter(list);
                 }
             },db,curruserid);
@@ -85,8 +86,8 @@ class UserHistoryActivity:AppCompatActivity() {
         setContentView(view);
     }
 }
-class CustomAdapter( mlist:List<EventsInformation>) : BaseAdapter(){
-    private lateinit var eventlist:List<EventsInformation>;
+class CustomAdapter( mlist:List<DBEventsInformation>) : BaseAdapter(){
+    private lateinit var eventlist:List<DBEventsInformation>;
     init{
         eventlist = mlist;
     }

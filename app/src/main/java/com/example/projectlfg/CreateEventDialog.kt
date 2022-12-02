@@ -1,7 +1,7 @@
 package com.example.projectlfg
 
 import DBEventsInformation
-import EventsInformation
+//import EventsInformation
 import android.app.*
 import android.app.DatePickerDialog.OnDateSetListener
 import android.app.TimePickerDialog.OnTimeSetListener
@@ -188,7 +188,6 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
                 val db = FirebaseDatabase.getInstance().reference.child("events1").child(uid)
                 GlobalScope.launch{
                     db.setValue(newinfo);
-
                 }
                 dismiss()
             }

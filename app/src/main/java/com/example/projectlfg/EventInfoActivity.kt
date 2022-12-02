@@ -1,28 +1,31 @@
 package com.example.projectlfg
 
 import CommentInformation
-import EventsInformation
+import DBEventsInformation
+import android.content.Intent
+//import EventsInformation
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import com.example.projectlfg.databinding.ActivityEventInfoBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-interface SetButton{
-    fun IfExistsCancelbutton(check:Boolean,id:String);
+interface OnGetDataListener{
+    fun onSuccess(commentInformation: CommentInformation,name:String,imguri:String);
 }
 
 class EventInfoActivity:AppCompatActivity() {
 
-    private lateinit var listview: ListView
 
     private lateinit var  EventName:EditText;
     private lateinit var DateAndTime:EditText;
@@ -32,14 +35,13 @@ class EventInfoActivity:AppCompatActivity() {
 
     private lateinit var CommentButton:Button;
     private lateinit var SignUpButton: Button;
+    private lateinit var GotoComments:Button;
     private lateinit var myratingbar:RatingBar;
     private lateinit var totalratingbar:RatingBar
     private lateinit var db:DatabaseReference
 
-    private  var EventsIsAdded = false;
-    private lateinit var CommentView: ListView;
     private lateinit var curruserid:String;
-
+    private var Eventid = "";
 
     private lateinit var binding:ActivityEventInfoBinding;
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,10 +61,19 @@ class EventInfoActivity:AppCompatActivity() {
         myratingbar = binding.myratingbar;
         totalratingbar = binding.totalratingbar
         CommentButton = binding.CommentEvent
+        GotoComments = binding.goviewcomments
+
+        Eventid = intent.getStringExtra("key") !!
 
         exists();
         getMyRatings()
         getTotalRatings()
+
+        GotoComments.setOnClickListener {
+            val intent = Intent(this,EventCommentsActivity::class.java);
+            intent.putExtra("key",Eventid)
+            startActivity(intent);
+        }
 
         myratingbar.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
             val key = intent.getStringExtra("key")
@@ -74,15 +85,15 @@ class EventInfoActivity:AppCompatActivity() {
 
         CommentButton.setOnClickListener {
             val createcommentdialog = CommentDialogFragment();
+            val bundle = Bundle();
+            bundle.putString("key",intent.getStringExtra("key"))
+            bundle.putFloat("rating",myratingbar.rating);
+            createcommentdialog.arguments = bundle;
             createcommentdialog.show(supportFragmentManager,"create comment")
         }
 
 
-        CommentView = view.findViewById(R.id.commentslistview)
-        var tmplist= ArrayList<CommentInformation>()
-        tmplist.add(CommentInformation(creator = "dd", date ="dd", comments = "dd", creatorid = "dd",rating=0.0f))
-        val adapter = CommentAdapter(tmplist);
-        CommentView.adapter = adapter
+//        CommentView = view.findViewById(R.id.commentslistview)
 
 
         db = FirebaseDatabase.getInstance().reference;
@@ -106,6 +117,9 @@ class EventInfoActivity:AppCompatActivity() {
             }
         }
     }
+
+
+
 
     fun getTotalRatings(){
         GlobalScope.launch{
@@ -177,37 +191,12 @@ class EventInfoActivity:AppCompatActivity() {
             val enddate = EndDateAndTime.text.toString()
             val attendess =  Attendees.text.toString().toLong();
             val locationstr = Location.text.toString();
-            val eventinfo = EventsInformation(name=eventname,startingdate=startingdate,
-                endtime = enddate, attendess = attendess,location=locationstr)
+            val eventinfo = DBEventsInformation(name=eventname,startingdate=startingdate, attendess = attendess,location=locationstr)
             val randomid = UUID.randomUUID().toString()
             val keystr = intent.getStringExtra("key")
             db.child("users").child(userid).child("events").child(keystr!!).setValue(intent.getStringExtra("key"));
             db.child("events1").child(keystr!!).child("people").child(curruserid).setValue(curruserid)
         }
-    }
-
-}
-
-class CommentAdapter(mlist:ArrayList<CommentInformation>):BaseAdapter(){
-    private lateinit var commentlist:ArrayList<CommentInformation>;
-    init{
-        commentlist = mlist;
-    }
-    override fun getCount(): Int {
-        return commentlist.size;
-    }
-
-    override fun getItem(position: Int): Any {
-        return commentlist.get(position)
-    }
-
-    override fun getItemId(position: Int): Long {
-        return 0;
-    }
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.user_comment_view,parent,false);
-        return view;
     }
 
 }
