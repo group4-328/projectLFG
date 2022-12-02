@@ -31,14 +31,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    //authentication
-    private lateinit var authenticator: FirebaseAuth
-
-    //database
-    private lateinit var database: FirebaseDatabase
-
-    //ref
-    private lateinit var myref : DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
