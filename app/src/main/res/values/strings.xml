@@ -17,6 +17,9 @@
     <string name="location_hint">Enter an address</string>
     <string name="information">Information</string>
     <string name="information_hint">Enter event description</string>
+    <string name="activity_type">Activity Type</string>
+    <string name="sort_activity">Filter</string>
+    <string name="limit_people">Number of People</string>
 
     <string name="create_event">create new event</string>
     <string-array name="TitleSpinner">
@@ -25,9 +28,25 @@
         <item>Lame</item>
     </string-array>
 
+    <string-array name="ActivityTypeSpinner">
+        <item>Sports</item>
+        <item>Board Games</item>
+        <item>Video Games</item>
+        <item>Industry Conference</item>
+        <item>TED</item>
+        <item>Field Marketing Events</item>
+        <item>Other</item>
+    </string-array>
+
     <string-array name="GoAgain">
         <item>Yes</item>
         <item>No</item>
+    </string-array>
+
+    <string-array name="numofpeople">
+        <item>>100</item>
+        <item>>1000</item>
+        <item>All</item>
     </string-array>
 
 </resources>

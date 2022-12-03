@@ -13,10 +13,7 @@ import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.DatePicker
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.TimePicker
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -46,6 +43,7 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
     private lateinit var locationEditText: EditText
     private lateinit var informationEditText: EditText
     private lateinit var attendantsnumber:EditText;
+    private lateinit var ActivitySpinner: Spinner;
     private lateinit var AddressResultLauncher:ActivityResultLauncher<Intent>;
 
     private var address: Address? = null
@@ -95,6 +93,11 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
 
         initUIElements(view)
         startAutocomplete()
+
+        //set spinner array
+        val activityarrayadapter = ArrayAdapter.createFromResource(requireContext(),R.array.ActivityTypeSpinner,android.R.layout.simple_spinner_item)
+        ActivitySpinner.adapter = activityarrayadapter;
+
         locationEditText.setOnFocusChangeListener { v, hasFocus ->
             if(hasFocus){
                 val fields = listOf(Place.Field.ID, Place.Field.NAME,Place.Field.ADDRESS_COMPONENTS,Place.Field.VIEWPORT,Place.Field.LAT_LNG)
@@ -157,6 +160,7 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
         locationEditText = view.findViewById(R.id.location_editText)
         informationEditText = view.findViewById(R.id.information_editText)
         attendantsnumber = view.findViewById(R.id.attendants_edittext)
+        ActivitySpinner = view.findViewById(R.id.eventactivitytype)
     }
 
     override fun onClick(dialog: DialogInterface?, which: Int) {
@@ -178,13 +182,13 @@ class CreateEventDialog: DialogFragment(), DialogInterface.OnClickListener, OnDa
                 val curruser = FirebaseAuth.getInstance().currentUser
                 val dateformat = "${day}/${month}/${year} ${hour}:${min}:00"
                 val uid = UUID.randomUUID().toString()
-
+                val GetEventType = ActivitySpinner.selectedItem.toString();
                 var newinfo = DBEventsInformation(
                     name =nameEditText.text.toString(), startingdate = dateformat ,
                                                 attendess = attendantsnumber.text.toString().toLong(),
                     location =locationEditText.text.toString(),
                                                 latLng = latLng!!, information = informationEditText.text.toString(),
-                                            creator = curruser!!.uid,id=uid)
+                                            creator = curruser!!.uid,id=uid, activitytypes = GetEventType);
                 val db = FirebaseDatabase.getInstance().reference.child("events1").child(uid)
                 GlobalScope.launch{
                     db.setValue(newinfo);

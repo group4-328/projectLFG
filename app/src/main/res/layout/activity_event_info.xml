@@ -59,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:paddingLeft= "10dp"
-        android:text="End time"
+        android:text="Activity Type"
         android:textSize="20dp"
         android:layout_marginTop="15dp"
         android:gravity="center_vertical"
@@ -124,6 +124,27 @@
         android:focusable="false"
         android:clickable="false"
         android:layout_height="50dp">
+    </EditText>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingLeft= "10dp"
+        android:text="Information"
+        android:textSize="20dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center_vertical"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:maxLines="1"
+        android:paddingLeft = "10dp"
+        android:inputType="text"
+        android:editable="false"
+        android:id="@+id/EventInformationtext"
+        android:focusable="false"
+        android:clickable="false"
+        android:layout_height="wrap_content">
     </EditText>
 
 

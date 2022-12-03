@@ -33,6 +33,8 @@ class EventCommentsActivity:AppCompatActivity() {
 
         getMyComments()
     }
+
+
     fun GetFromUserDb(creatorid:String,commentInformation: CommentInformation,listener: OnGetDataListener){
         val userdb = FirebaseDatabase.getInstance().reference.child("users").child(creatorid)
         userdb.get().addOnSuccessListener {

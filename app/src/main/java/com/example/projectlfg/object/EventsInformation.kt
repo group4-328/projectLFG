@@ -12,5 +12,6 @@ data class DBEventsInformation(
     var latLng: LatLng = LatLng(0.0,0.0),
     var information:String="",
     var creator:String="",
-    var id:String=""
+    var id:String="",
+    var activitytypes:String=""
 )
