@@ -1,16 +1,23 @@
 package com.example.projectlfg
 
 import CommentInformation
+import DBEventsInformation
 import android.content.Intent
 //import EventsInformation
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import com.example.projectlfg.databinding.ActivityEventInfoBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 interface OnGetDataListener{
@@ -22,7 +29,7 @@ class EventInfoActivity:AppCompatActivity() {
 
     private lateinit var  EventName:EditText;
     private lateinit var DateAndTime:EditText;
-    private lateinit var ActivityTypes:EditText;
+    private lateinit var EndDateAndTime:EditText;
     private lateinit var Attendees:EditText;
     private lateinit var Location:EditText;
 
@@ -32,7 +39,6 @@ class EventInfoActivity:AppCompatActivity() {
     private lateinit var myratingbar:RatingBar;
     private lateinit var totalratingbar:RatingBar
     private lateinit var db:DatabaseReference
-    private lateinit var EventInformation:EditText;
 
     private lateinit var curruserid:String;
     private var Eventid = "";
@@ -48,7 +54,7 @@ class EventInfoActivity:AppCompatActivity() {
 
         EventName = binding.EventName;
         DateAndTime = binding.DateAndTime;
-        ActivityTypes = binding.enddate;
+        EndDateAndTime = binding.enddate;
         Attendees = binding.Attendees;
         Location = binding.Location;
         SignUpButton = binding.SignUpEvent;
@@ -56,14 +62,12 @@ class EventInfoActivity:AppCompatActivity() {
         totalratingbar = binding.totalratingbar
         CommentButton = binding.CommentEvent
         GotoComments = binding.goviewcomments
-        EventInformation = binding.EventInformationtext
 
         Eventid = intent.getStringExtra("key") !!
 
         exists();
         getMyRatings()
         getTotalRatings()
-
 
         GotoComments.setOnClickListener {
             val intent = Intent(this,EventCommentsActivity::class.java);
@@ -88,15 +92,17 @@ class EventInfoActivity:AppCompatActivity() {
             createcommentdialog.show(supportFragmentManager,"create comment")
         }
 
+
+//        CommentView = view.findViewById(R.id.commentslistview)
+
+
         db = FirebaseDatabase.getInstance().reference;
 
         EventName.setText(intent.getStringExtra(MapsActivity.NAME));
         DateAndTime.setText(intent.getStringExtra(MapsActivity.STARTINGDATE))
-        ActivityTypes.setText(intent.getStringExtra(MapsActivity.STARTINGDATE))
+        EndDateAndTime.setText(intent.getStringExtra(MapsActivity.STARTINGDATE))
         Attendees.setText(intent.getLongExtra("Attendants",0).toString())
         Location.setText(intent.getStringExtra("LOCATION"));
-        EventInformation.setText(intent.getStringExtra("info"))
-
     }
 
     fun getMyRatings(){
@@ -111,6 +117,8 @@ class EventInfoActivity:AppCompatActivity() {
             }
         }
     }
+
+
 
 
     fun getTotalRatings(){
@@ -178,6 +186,13 @@ class EventInfoActivity:AppCompatActivity() {
         val curruser = FirebaseAuth.getInstance().currentUser;
         if(curruser != null){
             val userid = curruser.uid;
+            val eventname = EventName.text.toString()
+            val startingdate = DateAndTime.text.toString()
+            val enddate = EndDateAndTime.text.toString()
+            val attendess =  Attendees.text.toString().toLong();
+            val locationstr = Location.text.toString();
+            val eventinfo = DBEventsInformation(name=eventname,startingdate=startingdate, attendess = attendess,location=locationstr)
+            val randomid = UUID.randomUUID().toString()
             val keystr = intent.getStringExtra("key")
             db.child("users").child(userid).child("events").child(keystr!!).setValue(intent.getStringExtra("key"));
             db.child("events1").child(keystr!!).child("people").child(curruserid).setValue(curruserid)

@@ -203,10 +203,17 @@
         >
         <Button
             android:layout_height="match_parent"
-            android:layout_width="300dp"
+            android:layout_width="150dp"
             android:text="View Comments"
             android:id="@+id/goviewcomments"
             ></Button>
+
+        <Button
+            android:layout_height="match_parent"
+            android:layout_width="150dp"
+            android:text="join event chat"
+            android:id="@+id/eventChatButton"
+            android:layout_marginLeft="10dp"></Button>
 
     </LinearLayout>
 
@@ -234,7 +241,6 @@
             >
         </Button>
     </LinearLayout>
-
 
 
 
