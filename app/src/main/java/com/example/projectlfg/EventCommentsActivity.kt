@@ -9,19 +9,27 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.projectlfg.databinding.ActivityCommentListviewBinding
 import com.example.projectlfg.databinding.ActivityEventInfoBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.net.URL
 
 class EventCommentsActivity:AppCompatActivity() {
     private lateinit var binding:ActivityCommentListviewBinding
     private lateinit var CommentView:ListView;
     private var EventId = ""
+    var curruserid:String= "";
+
+    private lateinit var commentsViewModel: CommentsViewModel;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCommentListviewBinding.inflate(layoutInflater)
@@ -30,78 +38,18 @@ class EventCommentsActivity:AppCompatActivity() {
         CommentView = binding.commentslistview;
 
         EventId = intent.getStringExtra("key")!!;
+        curruserid = FirebaseAuth.getInstance().currentUser!!.uid;
+        val commentsViewModelFactory = CommentsViewModelFactory();
+        commentsViewModel = ViewModelProvider(this,commentsViewModelFactory).get(CommentsViewModel::class.java);
+        commentsViewModel.getMyComments(EventId,curruserid)
 
-        getMyComments()
+        commentsViewModel.CommentsLiveData.observe(this, Observer {
+            val tmpval = it;
+            val adapter = CommentAdapter(it);
+            CommentView.adapter = adapter;
+        })
     }
 
-
-    fun GetFromUserDb(creatorid:String,commentInformation: CommentInformation,listener: OnGetDataListener){
-        val userdb = FirebaseDatabase.getInstance().reference.child("users").child(creatorid)
-        userdb.get().addOnSuccessListener {
-            if(it.value != null){
-                val data= it.value as HashMap<String,*>;
-                val name = data.get("name") as String;
-                val imguri = data.get("imageuri") as String;
-                listener.onSuccess(commentInformation, name = name,imguri=imguri);
-            }
-        };
-    }
-
-
-
-    fun getMyComments(){
-        GlobalScope.launch {
-
-            val checklistener = object: ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    var commentsarr = ArrayList<CommentInformation>();
-                    val tmpsnapshot = snapshot;
-
-                    if(snapshot.exists() && snapshot.hasChild("comments") ){
-
-                        val tmp = snapshot.child("comments").value as HashMap<String,*>
-                        val tmpsize = tmp.size
-                        var counter = 0 ;
-                        for((key,value) in tmp){
-                            val tmpvalue = value as HashMap<String,*>
-                            val creatorid = tmpvalue.get("creatorid") as String;
-                            val datestr= tmpvalue.get("date") as String
-                            val rating = tmpvalue.get("rating") as Long
-                            val title = tmpvalue.get("titletext") as String
-                            val comment = tmpvalue.get("comments") as String
-                            val goagainstr= tmpvalue.get("goagainstr") as String;
-
-                            var tmpcomment = CommentInformation(comments = comment ,date=datestr,
-                                rating= rating.toFloat(), titletext = title, goagainstr = goagainstr)
-
-                            GetFromUserDb(creatorid,tmpcomment,object:OnGetDataListener{
-                                override fun onSuccess(
-                                    commentInformation: CommentInformation,
-                                    name: String,
-                                    imguri: String
-                                ) {
-                                    commentInformation.creator = name;
-                                    commentInformation.imguri=imguri;
-                                    commentsarr.add(commentInformation);
-
-                                    val adapter = CommentAdapter(commentsarr);
-                                    CommentView.adapter = adapter;
-                                }
-                            })
-
-                        }
-                    }
-                }
-                override fun onCancelled(error: DatabaseError) {
-                }
-
-            }
-
-            val keystr = intent.getStringExtra("key")
-            FirebaseDatabase.getInstance().reference.child("events1")
-                .child(keystr!!).addValueEventListener(checklistener)
-        }
-    }
 }
 
 
@@ -129,8 +77,9 @@ class CommentAdapter(mlist:ArrayList<CommentInformation>): BaseAdapter(){
         view.findViewById<TextView>(R.id.comment_text).setText(commentlist[position].comments)
         view.findViewById<RatingBar>(R.id.fixedratingbar).rating = commentlist.get(position).rating
         view.findViewById<TextView>(R.id.titletextview).setText("Review: ${commentlist.get(position).titletext}   Would Go Again? ${commentlist.get(position).goagainstr}")
-        view.findViewById<ImageView>(R.id.cryingcatimg).setImageURI(commentlist.get(position).imguri.toUri())
+        Glide.with(view).load(commentlist.get(position).imguri.toUri()).into(view.findViewById(R.id.cryingcatimg))
         return view;
+
     }
 
 }
