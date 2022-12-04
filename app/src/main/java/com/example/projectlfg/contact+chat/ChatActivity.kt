@@ -34,6 +34,7 @@ class ChatActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         messageBox = binding.chatRoomInput
+        sendButton = binding.chatRoomSend
         msgList = arrayListOf()
 
         chatView = binding.chatRoomMsgs
@@ -43,13 +44,12 @@ class ChatActivity : AppCompatActivity() {
 
 
         val type = intent.getStringExtra("type")
+        val name = intent.getStringExtra("name")
+        binding.chatRoomName.text = name
 
         // Individual chat
         if(type == CHAT_INDIVIDUAL){
-            val name = intent.getStringExtra("name")
             receiverUID = intent.getStringExtra("receiver")!!
-            sendButton = binding.chatRoomSend
-            binding.chatRoomName.text = name
 
             sendRoomID = currentUser!!.uid + receiverUID
             receiveRoomID = receiverUID + currentUser!!.uid
@@ -92,6 +92,41 @@ class ChatActivity : AppCompatActivity() {
         // group chat
         }else{
 
+            receiveRoomID = intent.getStringExtra("eventID").toString()
+
+            myref.child("events1").child(receiveRoomID).child("chat")
+                .addValueEventListener(object: ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        msgList.clear()
+
+                        for(msg in snapshot.children){
+
+                            val text = msg.child("msg").getValue()
+                            val sender = msg.child("sender").getValue()
+
+                            msgList.add(Message(text.toString(), sender.toString()))
+                        }
+
+                        adapter.notifyDataSetChanged()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        println(error)
+                    }
+                })
+
+
+            sendButton.setOnClickListener {
+
+                val message = Message(messageBox.text.toString(), currentUser!!.uid.toString())
+
+
+                myref.child("events1").child(receiveRoomID).child("chat").push()
+                    .setValue(message)
+
+                messageBox.setText("")
+                messageBox.hint = ""
+            }
         }
     }
 }

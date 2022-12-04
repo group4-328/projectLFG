@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.projectlfg.MainActivity.Companion.currentUser
 import com.example.projectlfg.MainActivity.Companion.storage
 import com.example.projectlfg.Util.CHAT_INDIVIDUAL
-import com.squareup.picasso.Picasso
 import java.io.File
 
 
