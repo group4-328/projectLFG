@@ -8,12 +8,14 @@ import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 
@@ -25,12 +27,27 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.projectlfg.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.model.Marker
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.tasks.await
+import okhttp3.internal.cache.DiskLruCache
 
 interface SetMarkers{
     fun SetMarkersOnMap(mList:List<DBEventsInformation>);
 }
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+interface GetRatingListener{
+    fun onSuccess(value:Long);
+}
+
+interface GetViewListener{
+    fun onSuccess(tmpview:View);
+}
+
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener ,GoogleMap.InfoWindowAdapter{
 
     companion object {
         val latLngKey = "lat_lng_key"
@@ -121,23 +138,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                     marker!!.isVisible = true;
                 }
             }
-//            mMap.setInfoWindowAdapter(this);
+            mMap.setInfoWindowAdapter(this);
         })
-
+        mMap.setOnInfoWindowClickListener {
+                mMap.setOnInfoWindowClickListener {
+                    val name = it.title
+                    val info = DBHashMap.get(name);
+                    val intent = Intent(applicationContext,EventInfoActivity::class.java);
+                    intent.putExtra(NAME,info!!.name);
+                    intent.putExtra(LOCATION,info.location);
+                    intent.putExtra(STARTINGDATE,info.startingdate);
+                    intent.putExtra("Attendants",info.attendess);
+                    intent.putExtra("info",info.information);
+                    intent.putExtra("key",info.id)
+                    intent.putExtra("info",info.information);
+                    intent.putExtra(ACTIVITYTYPESTR,info.activitytypes)
+                    startActivity(intent);
+                }
+        }
         mMap.setOnMarkerClickListener(object : GoogleMap.OnMarkerClickListener{
             override fun onMarkerClick(p0: Marker): Boolean {
-                val name = p0.title
-                val info = DBHashMap.get(name);
-                val intent = Intent(applicationContext,EventInfoActivity::class.java);
-                intent.putExtra(NAME,info!!.name);
-                intent.putExtra(LOCATION,info.location);
-                intent.putExtra(STARTINGDATE,info.startingdate);
-                intent.putExtra("Attendants",info.attendess);
-                intent.putExtra("info",info.information);
-                intent.putExtra("key",info.id)
-                intent.putExtra("info",info.information);
-                intent.putExtra(ACTIVITYTYPESTR,info.activitytypes)
-                startActivity(intent);
+                p0.showInfoWindow()
+
+
                 return true;
             }
         })
@@ -195,5 +218,46 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         createEventDialog.show(supportFragmentManager, "createEvent")
     }
 
+    override fun getInfoContents(p0: Marker): View? {
+         lateinit var infowindowview :View;
+        var averagerating :Long= -1;
+
+         suspend fun jobA():View{
+             val date = DBHashMap.get(p0.title)!!.startingdate;
+             val view= layoutInflater.inflate(R.layout.activity_info_window,null);
+             val title = view.findViewById<TextView>(R.id.InfoWindowTitle)
+             val ratingbar = view.findViewById<RatingBar>(R.id.InfoWindowtotalratingbar);
+             val datetext = view.findViewById<TextView>(R.id.InfoWindowDate)
+             val checkbtn = view.findViewById<Button>(R.id.checkitoutbutton)
+             title.setText(DBHashMap.get(p0.title)!!.name);
+             datetext.setText(date);
+             return view;
+         }
+        suspend fun totalrating():DataSnapshot {
+            var total :Long = 0;
+            var count = 0 ;
+            val db = FirebaseDatabase.getInstance().reference.child("events1").child(p0.title!!).child("ratings")
+            val data = db.get().await()
+            return data;
+        }
+        runBlocking {
+                 infowindowview =jobA();
+                val data = totalrating().value as HashMap<String,Long>
+                var total :Long= 0;
+                var count = 0;
+                 for((key,value) in data){
+                    total += value;
+                    count ++
+                }
+                println("3.${total/count}");
+                infowindowview.findViewById<RatingBar>(R.id.InfoWindowtotalratingbar).rating = (total/count).toFloat()
+        }
+
+        return   infowindowview;
+    }
+
+    override fun getInfoWindow(p0: Marker): View? {
+        return null;
+    }
 
 }
