@@ -10,8 +10,10 @@ import com.example.projectlfg.MainActivity.Companion.currentUser
 import com.example.projectlfg.MainActivity.Companion.myref
 import com.example.projectlfg.Util.CHAT_INDIVIDUAL
 import com.example.projectlfg.databinding.ActivityChatBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 class ChatActivity : AppCompatActivity() {
@@ -104,8 +106,10 @@ class ChatActivity : AppCompatActivity() {
 
                             val text = msg.child("msg").getValue()
                             val sender = msg.child("sender").getValue()
-
-                            msgList.add(Message(text.toString(), sender.toString()))
+                            val img = msg.child("imguri").getValue();
+                            val tmpmsg= Message(text.toString(), sender.toString())
+                            tmpmsg.imguri = img as String;
+                            msgList.add(tmpmsg);
                         }
 
                         adapter.notifyDataSetChanged()
@@ -116,17 +120,23 @@ class ChatActivity : AppCompatActivity() {
                     }
                 })
 
-
             sendButton.setOnClickListener {
 
-                val message = Message(messageBox.text.toString(), currentUser!!.uid.toString())
+
+                val tmpuser = FirebaseAuth.getInstance().currentUser!!.uid.toString()
+                val message = Message(messageBox.text.toString(), tmpuser);
+
+                FirebaseDatabase.getInstance().reference.child("users").child(tmpuser).get().addOnSuccessListener {
+                    val data = it.value as HashMap<String,*>
+                    message.imguri = data.get("imageuri") as String;
+                    myref.child("events1").child(receiveRoomID).child("chat").push()
+                        .setValue(message)
+
+                    messageBox.setText("")
+                    messageBox.hint = ""
+                }
 
 
-                myref.child("events1").child(receiveRoomID).child("chat").push()
-                    .setValue(message)
-
-                messageBox.setText("")
-                messageBox.hint = ""
             }
         }
     }

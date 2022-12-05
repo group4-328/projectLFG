@@ -4,7 +4,7 @@ class Message {
 
     var msg: String? = null
     var sender: String? = null
-
+    var imguri:String?=""
     constructor()
 
     constructor(msg: String, sender: String){

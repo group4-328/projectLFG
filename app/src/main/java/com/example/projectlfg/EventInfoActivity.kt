@@ -96,6 +96,9 @@ class EventInfoActivity:AppCompatActivity() {
             createcommentdialog.show(supportFragmentManager,"create comment")
         }
 
+
+
+
         eventChatButton.setOnClickListener {
 
             val chatIntent = Intent(this, ChatActivity::class.java)
@@ -105,8 +108,6 @@ class EventInfoActivity:AppCompatActivity() {
             startActivity(chatIntent)
         }
 
-
-
 //        CommentView = view.findViewById(R.id.commentslistview)
 
 
@@ -114,7 +115,7 @@ class EventInfoActivity:AppCompatActivity() {
 
         EventName.setText(intent.getStringExtra(MapsActivity.NAME));
         DateAndTime.setText(intent.getStringExtra(MapsActivity.STARTINGDATE))
-        EndDateAndTime.setText(intent.getStringExtra(MapsActivity.STARTINGDATE))
+        EndDateAndTime.setText(intent.getStringExtra(MapsActivity.ACTIVITYTYPESTR))
         Attendees.setText(intent.getLongExtra("Attendants",0).toString())
         Location.setText(intent.getStringExtra("LOCATION"));
     }

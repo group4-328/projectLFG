@@ -33,6 +33,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         val NAME = "NAME"
         val STARTINGDATE = "STARTDINGDATE"
         val LOCATION = "LOCATION"
+        val ACTIVITYTYPESTR="activitytype"
     }
 
     private lateinit var createEventButton: Button
@@ -63,7 +64,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        val factory = EventsViewModelFactory();
+        val factory = ProjectViewModelFactory();
         eventsViewModel = ViewModelProvider(this,factory).get(EventsViewModel::class.java);
         eventsViewModel.listenUpdates();
 
@@ -128,7 +129,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 intent.putExtra("info",info.information);
                 intent.putExtra("key",info.id)
                 intent.putExtra("info",info.information);
-
+                intent.putExtra(ACTIVITYTYPESTR,info.activitytypes)
                 startActivity(intent);
                 return true;
             }

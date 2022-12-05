@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="100dp"
+    android:gravity="right"
     android:background="@color/black">
 
     <TextView
@@ -9,12 +10,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_margin="2sp"
-        android:padding="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginStart="2sp"
+        android:layout_marginTop="2sp"
+        android:layout_marginEnd="2sp"
+        android:layout_marginBottom="2sp"
         android:background="@drawable/rectanglebox"
+        android:padding="10dp"
         android:text="testing sent message"
         android:textSize="30sp" />
+
+    <ImageView
+        android:layout_width="44dp"
+        android:layout_height="61dp"
+        android:id="@+id/chatsendimg"
+        android:layout_marginRight="2sp"
+        android:layout_toRightOf="@+id/sentmsgtext"
+        android:src="@drawable/cryingcat">
+
+    </ImageView>
 </RelativeLayout>

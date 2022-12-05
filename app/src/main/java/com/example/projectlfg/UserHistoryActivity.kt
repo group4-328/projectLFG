@@ -102,7 +102,7 @@ class CustomAdapter( mlist:List<DBEventsInformation>) : BaseAdapter(){
     }
 
     override fun getItemId(position: Int): Long {
-        return eventlist[position].id.toLong();
+        return 0
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -119,6 +119,7 @@ class CustomAdapter( mlist:List<DBEventsInformation>) : BaseAdapter(){
             intent.putExtra("key",eventlist[position].id)
             intent.putExtra("LOCATION",eventlist[position].location);
             intent.putExtra("info",eventlist[position].information);
+            intent.putExtra(MapsActivity.ACTIVITYTYPESTR,eventlist.get(position).activitytypes)
             view.context.startActivity(intent);
         }
         return view;

@@ -1,5 +1,7 @@
 package com.example.projectlfg
 
+import DBEventsInformation
+
 class UserInformation {
 
     // class instead of data for firebase operation
@@ -9,6 +11,8 @@ class UserInformation {
     var imageuri: String? = ""
     var uid: String? = ""
     var friendList: ArrayList<String>? = null
+    var eventsinfolist =ArrayList<DBEventsInformation>();
+
 
     constructor()
 

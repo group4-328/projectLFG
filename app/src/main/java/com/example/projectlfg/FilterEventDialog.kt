@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
@@ -37,7 +36,7 @@ class FilterEventDialog:DialogFragment() ,DialogInterface.OnClickListener{
         ActivityTypeNumberofPeople.adapter = arrayadapter2
 
 
-        val factory = EventsViewModelFactory();
+        val factory = ProjectViewModelFactory();
         eventsViewModel = ViewModelProvider(this,factory).get(EventsViewModel::class.java)
         RemoveFiltersButton.setOnClickListener {
             eventsViewModel.RemoveFilters()

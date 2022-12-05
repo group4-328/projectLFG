@@ -107,7 +107,7 @@ class EventsViewModel:ViewModel() {
 
 }
 
-class EventsViewModelFactory():ViewModelProvider.Factory{
+class ProjectViewModelFactory():ViewModelProvider.Factory{
 
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -117,6 +117,14 @@ class EventsViewModelFactory():ViewModelProvider.Factory{
                 return getvm(key) as T
             }else{
                 addVM(key,EventsViewModel());
+                return getvm(key) as T;
+            }
+        }else if(modelClass.isAssignableFrom(UserProfileViewModel::class.java)){
+            val key = "UserProfileVM"
+            if(hashmapvm.containsKey(key)){
+                return getvm(key) as T
+            }else{
+                addVM(key,UserProfileViewModel());
                 return getvm(key) as T;
             }
         }
