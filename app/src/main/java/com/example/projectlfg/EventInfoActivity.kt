@@ -33,6 +33,8 @@ class EventInfoActivity:AppCompatActivity() {
     private lateinit var Attendees:EditText;
     private lateinit var Location:EditText;
 
+    private lateinit var eventChatButton: Button
+
     private lateinit var CommentButton:Button;
     private lateinit var SignUpButton: Button;
     private lateinit var GotoComments:Button;
@@ -63,6 +65,8 @@ class EventInfoActivity:AppCompatActivity() {
         CommentButton = binding.CommentEvent
         GotoComments = binding.goviewcomments
 
+        eventChatButton = binding.eventChatButton
+
         Eventid = intent.getStringExtra("key") !!
 
         exists();
@@ -91,6 +95,16 @@ class EventInfoActivity:AppCompatActivity() {
             createcommentdialog.arguments = bundle;
             createcommentdialog.show(supportFragmentManager,"create comment")
         }
+
+        eventChatButton.setOnClickListener {
+
+            val chatIntent = Intent(this, ChatActivity::class.java)
+            chatIntent.putExtra("type", Util.CHAT_GROUP)
+            chatIntent.putExtra("name", intent.getStringExtra(MapsActivity.NAME))
+            chatIntent.putExtra("eventID", Eventid)
+            startActivity(chatIntent)
+        }
+
 
 
 //        CommentView = view.findViewById(R.id.commentslistview)

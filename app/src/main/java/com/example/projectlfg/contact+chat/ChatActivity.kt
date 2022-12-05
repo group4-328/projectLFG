@@ -45,6 +45,7 @@ class ChatActivity : AppCompatActivity() {
 
         val type = intent.getStringExtra("type")
         val name = intent.getStringExtra("name")
+        println(name)
         binding.chatRoomName.text = name
 
         // Individual chat
