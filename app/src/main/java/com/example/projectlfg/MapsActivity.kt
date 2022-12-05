@@ -8,8 +8,12 @@ import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.RatingBar
+import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 
@@ -109,12 +113,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                 if(!DBHashMap.containsKey(key)){
                     val marker = mMap.addMarker(tmpmarkeroption)
                     DBHashMap.put(key,it);
+                    marker!!.title = key;
+                    marker!!.snippet = it.name;
                     MarkerHashMap.put(key,marker!!);
                 }else{
                     val marker = MarkerHashMap.get(key)
                     marker!!.isVisible = true;
                 }
             }
+//            mMap.setInfoWindowAdapter(this);
         })
 
         mMap.setOnMarkerClickListener(object : GoogleMap.OnMarkerClickListener{
@@ -187,7 +194,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         createEventDialog.arguments = bundle
         createEventDialog.show(supportFragmentManager, "createEvent")
     }
-
 
 
 }

@@ -138,21 +138,28 @@ class EventInfoActivity:AppCompatActivity() {
 
     fun getTotalRatings(){
         GlobalScope.launch{
-            val keystr = intent.getStringExtra("key");
-            val tmpdb = FirebaseDatabase.getInstance().reference.child("events1").child(keystr!!).child("ratings")
-            tmpdb.get().addOnSuccessListener {
-                if(it.value!=null){
-                    val data = it.value as HashMap<String,Long>;
-                    var total  = 0.0;
-                    var people = 0;
-                    for((key,value) in data){
-                        val num = value.toFloat();
-                        total = total+num;
-                        people+=1;
+
+            val checklistener = object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot != null){
+                        var total  = 0.0;
+                        var people = 0;
+                        val data = snapshot.value as HashMap<String,Long>
+                        for((key,value) in data){
+                            val num = value.toFloat();
+                            total = total+num;
+                            people+=1;
+                        }
+                        totalratingbar.rating = (total/people).toFloat();
                     }
-                    totalratingbar.rating = (total/people).toFloat();
+                }
+
+                override fun onCancelled(error: DatabaseError) {
                 }
             }
+            val keystr = intent.getStringExtra("key");
+            val tmpdb = FirebaseDatabase.getInstance().reference.child("events1").child(keystr!!).child("ratings")
+            tmpdb.addValueEventListener(checklistener)
         }
     }
 

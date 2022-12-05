@@ -55,8 +55,12 @@ class UserHistoryActivity:AppCompatActivity() {
                             val attendess = tmp.get("attendess") as Long;
                             val info = tmp.get("information") as String
                             val id = tmp.get("id") as String;
+                            var activitytype = ""
+                            if(tmp.containsKey("activitytypes")){
+                                 activitytype = tmp.get("activitytypes") as String
+                            }
                             eventList.add(DBEventsInformation(name=name,startingdate=startindate,
-                                attendess=attendess,location=location, id = id, information = info));
+                                attendess=attendess,location=location, id = id, information = info, activitytypes = activitytype));
                         }
                         firebaseCallBackList.onCallBack(eventList);
                     }
@@ -119,6 +123,7 @@ class CustomAdapter( mlist:List<DBEventsInformation>) : BaseAdapter(){
             intent.putExtra("key",eventlist[position].id)
             intent.putExtra("LOCATION",eventlist[position].location);
             intent.putExtra("info",eventlist[position].information);
+            intent.putExtra(MapsActivity.ACTIVITYTYPESTR,eventlist.get(position).activitytypes)
             intent.putExtra(MapsActivity.ACTIVITYTYPESTR,eventlist.get(position).activitytypes)
             view.context.startActivity(intent);
         }

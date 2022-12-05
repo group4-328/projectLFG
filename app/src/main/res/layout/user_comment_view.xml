@@ -7,12 +7,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingLeft="10dp"
         android:gravity="center_vertical"
         >
         <ImageView
-            android:layout_height="100dp"
-            android:layout_width="100dp"
-            android:src="@drawable/cryingcat"
+            android:layout_height="60dp"
+            android:layout_width="60dp"
+
             android:id="@+id/cryingcatimg"
             >
         </ImageView>

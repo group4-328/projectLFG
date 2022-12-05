@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.projectlfg.databinding.ActivityCommentListviewBinding
 import com.example.projectlfg.databinding.ActivityEventInfoBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -77,7 +78,7 @@ class CommentAdapter(mlist:ArrayList<CommentInformation>): BaseAdapter(){
         view.findViewById<TextView>(R.id.comment_text).setText(commentlist[position].comments)
         view.findViewById<RatingBar>(R.id.fixedratingbar).rating = commentlist.get(position).rating
         view.findViewById<TextView>(R.id.titletextview).setText("Review: ${commentlist.get(position).titletext}   Would Go Again? ${commentlist.get(position).goagainstr}")
-        Glide.with(view).load(commentlist.get(position).imguri.toUri()).into(view.findViewById(R.id.cryingcatimg))
+        Glide.with(view).load(commentlist.get(position).imguri.toUri()).apply(RequestOptions().circleCrop()).into(view.findViewById(R.id.cryingcatimg))
         return view;
 
     }

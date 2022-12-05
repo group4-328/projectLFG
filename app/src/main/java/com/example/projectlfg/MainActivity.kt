@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
                         it.child("uid").value.toString())
                     popUp(this, "Welcome back, " + it.child("name").value.toString())
                     println(currentUser.toString())
+                    finish();
                 }.addOnFailureListener {
 
                 }
