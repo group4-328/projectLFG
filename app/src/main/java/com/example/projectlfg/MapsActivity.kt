@@ -232,6 +232,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             val tmp = eventdata.get("ratings") as HashMap<String,Long>
             return tmp;
         }
+
         runBlocking {
                  infowindowview =jobA();
                 val data = totalrating() as HashMap<String,Long>

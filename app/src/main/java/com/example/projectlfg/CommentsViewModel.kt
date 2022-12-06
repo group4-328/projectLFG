@@ -41,7 +41,10 @@ class CommentsViewModel:ViewModel() {
 
                         val tmp = snapshot.child("comments").value as HashMap<String,*>
                         val totsize = tmp.size;
-                        val ratingspath = snapshot.child("ratings").value as HashMap<String,Long>
+                        var ratingspath = HashMap<String,Long>();
+                        if(snapshot.hasChild("ratings")){
+                             ratingspath = snapshot.child("ratings").value as HashMap<String,Long>
+                        }
                         var rating :Long= 0 ;
                         if(ratingspath.containsKey(curruserid)){
                             rating = ratingspath.get(curruserid)!!
@@ -93,12 +96,14 @@ class CommentsViewModelFactory(): ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(CommentsViewModel::class.java)){
             val key = "CommentsVM"
-            if(hashmapvm.containsKey(key)){
-                return getvm(key) as T
-            }else{
-                addVM(key,CommentsViewModel());
-                return getvm(key) as T;
-            }
+//            if(hashmapvm.containsKey(key)){
+//                return getvm(key) as T
+//            }else{
+//                addVM(key,CommentsViewModel());
+//                return getvm(key) as T;
+//            }
+            addVM(key,CommentsViewModel())
+            return getvm(key) as T;
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
