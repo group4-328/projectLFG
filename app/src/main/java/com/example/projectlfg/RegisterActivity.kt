@@ -99,7 +99,7 @@ class RegisterActivity : AppCompatActivity() {
         authenticator.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful && imageUri != null) {
-                    
+
                     // store user profile
                     val uniqueid = UUID.randomUUID();
                     val ref= storageRef.child("images/"+ uniqueid);

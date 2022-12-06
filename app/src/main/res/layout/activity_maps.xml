@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="20dp"
+        android:drawableLeft="@drawable/ic_baseline_create_24"
         android:text="@string/create_event" />
 
     <Button
@@ -30,6 +31,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="31dp"
         android:layout_marginBottom="0dp"
+        android:drawableLeft="@drawable/filter_icon"
         android:layout_toRightOf="@+id/create_event_map_button"
         android:text="@string/sort_activity" />
 </RelativeLayout>
