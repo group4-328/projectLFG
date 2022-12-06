@@ -141,7 +141,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
             mMap.setInfoWindowAdapter(this);
         })
         mMap.setOnInfoWindowClickListener {
-                mMap.setOnInfoWindowClickListener {
                     val name = it.title
                     val info = DBHashMap.get(name);
                     val intent = Intent(applicationContext,EventInfoActivity::class.java);
@@ -154,7 +153,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                     intent.putExtra("info",info.information);
                     intent.putExtra(ACTIVITYTYPESTR,info.activitytypes)
                     startActivity(intent);
-                }
         }
         mMap.setOnMarkerClickListener(object : GoogleMap.OnMarkerClickListener{
             override fun onMarkerClick(p0: Marker): Boolean {
