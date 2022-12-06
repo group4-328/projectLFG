@@ -66,8 +66,10 @@ class ChatActivity : AppCompatActivity() {
 
                             val text = msg.child("msg").getValue()
                             val sender = msg.child("sender").getValue()
-
-                            msgList.add(Message(text.toString(), sender.toString()))
+                            val imguri = msg.child("imguri").getValue() as String
+                            val tmpmsg = Message(text.toString(),sender.toString())
+                            tmpmsg.imguri = imguri;
+                            msgList.add(tmpmsg)
                         }
 
                         adapter.notifyDataSetChanged()
@@ -80,14 +82,19 @@ class ChatActivity : AppCompatActivity() {
 
             sendButton.setOnClickListener {
 
-                val message = Message(messageBox.text.toString(), currentUser!!.uid.toString())
+                val curreuserid=FirebaseAuth.getInstance().currentUser!!.uid.toString()
+                val message = Message(messageBox.text.toString(), curreuserid)
 
-                myref.child("chatroom").child(sendRoomID).child("msgs").push()
-                    .setValue(message).addOnCompleteListener {
-                        myref.child("chatroom").child(receiveRoomID).child("msgs").push()
-                            .setValue(message)
-                    }
 
+                FirebaseDatabase.getInstance().reference.child("users").child(curreuserid).get().addOnSuccessListener {
+                    val data = it.value as HashMap<String,*>
+                    message.imguri = data.get("imageuri") as String;
+                    myref.child("chatroom").child(sendRoomID).child("msgs").push()
+                        .setValue(message).addOnCompleteListener {
+                            myref.child("chatroom").child(receiveRoomID).child("msgs").push()
+                                .setValue(message)
+                        }
+                }
                 messageBox.setText("")
                 messageBox.hint = ""
             }
