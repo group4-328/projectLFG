@@ -141,11 +141,13 @@ class EventInfoActivity:AppCompatActivity() {
 
             val checklistener = object :ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if(snapshot != null){
+                    if(snapshot != null  && snapshot.hasChild("ratings")){
+
                         var total  = 0.0;
                         var people = 0;
-                        val data = snapshot.value as HashMap<String,Long>
-                        for((key,value) in data){
+                        val data = snapshot.value as HashMap<String,*>
+                        val eventdata = data.get("ratings") as HashMap<String,Long>
+                        for((key,value) in eventdata){
                             val num = value.toFloat();
                             total = total+num;
                             people+=1;
@@ -158,7 +160,7 @@ class EventInfoActivity:AppCompatActivity() {
                 }
             }
             val keystr = intent.getStringExtra("key");
-            val tmpdb = FirebaseDatabase.getInstance().reference.child("events1").child(keystr!!).child("ratings")
+            val tmpdb = FirebaseDatabase.getInstance().reference.child("events1").child(keystr!!)
             tmpdb.addValueEventListener(checklistener)
         }
     }

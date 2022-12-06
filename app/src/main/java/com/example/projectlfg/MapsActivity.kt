@@ -153,12 +153,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
                     intent.putExtra("info",info.information);
                     intent.putExtra(ACTIVITYTYPESTR,info.activitytypes)
                     startActivity(intent);
+
         }
         mMap.setOnMarkerClickListener(object : GoogleMap.OnMarkerClickListener{
             override fun onMarkerClick(p0: Marker): Boolean {
                 p0.showInfoWindow()
-
-
                 return true;
             }
         })
@@ -231,24 +230,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
              datetext.setText(date);
              return view;
          }
-        suspend fun totalrating():DataSnapshot {
-            var total :Long = 0;
-            var count = 0 ;
-            val db = FirebaseDatabase.getInstance().reference.child("events1").child(p0.title!!).child("ratings")
+        suspend fun totalrating():HashMap<String,Long> {
+            val db = FirebaseDatabase.getInstance().reference.child("events1").child(p0.title!!)
+//                .child("ratings")
+
             val data = db.get().await()
-            return data;
+            val eventdata = data.value as HashMap<String,*>
+            if(!eventdata.containsKey("ratings")){
+                val tmp = HashMap<String,Long>();
+                return tmp
+            }
+            val tmp = eventdata.get("ratings") as HashMap<String,Long>
+            return tmp;
         }
         runBlocking {
                  infowindowview =jobA();
-                val data = totalrating().value as HashMap<String,Long>
+                val data = totalrating() as HashMap<String,Long>
                 var total :Long= 0;
                 var count = 0;
                  for((key,value) in data){
                     total += value;
                     count ++
                 }
-                println("3.${total/count}");
-                infowindowview.findViewById<RatingBar>(R.id.InfoWindowtotalratingbar).rating = (total/count).toFloat()
+                if(count > 0){
+                    println("3.${total/count}");
+                    infowindowview.findViewById<RatingBar>(R.id.InfoWindowtotalratingbar).rating = (total/count).toFloat()
+                }
+
         }
 
         return   infowindowview;

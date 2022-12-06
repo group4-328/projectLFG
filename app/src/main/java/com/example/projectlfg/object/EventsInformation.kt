@@ -13,5 +13,5 @@ data class DBEventsInformation(
     var information:String="",
     var creator:String="",
     var id:String="",
-    var activitytypes:String=""
+    var activitytypes:String="",
 )
