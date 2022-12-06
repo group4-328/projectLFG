@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_gravity="center"
+    android:minWidth="400dp">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:text="Title"
         android:textStyle="bold"
         android:gravity="center_vertical"
+        android:layout_marginHorizontal="10dp"
         android:textSize="20sp"
         >
     </TextView>
@@ -17,23 +20,22 @@
         android:id="@+id/TitleSpinner"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_below="@+id/inputtypetextview"></Spinner>
+        android:layout_marginHorizontal="10dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:layout_height="30dp"
         android:textStyle="bold"
+        android:layout_marginHorizontal="10dp"
         android:text="Would Go Again?"
         android:gravity="center_vertical"
-        android:textSize="20sp"
-        >
-    </TextView>
+        android:textSize="20sp"/>
     <Spinner
         android:id="@+id/GoAgainSpinner"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_below="@+id/inputtypetextview"></Spinner>
+        android:layout_marginHorizontal="10dp"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
@@ -41,33 +43,22 @@
         android:textStyle="bold"
         android:text="Leave a Comment"
         android:gravity="center_vertical"
-        android:textSize="20sp"
-        >
-    </TextView>
+        android:layout_marginHorizontal="10dp"
+        android:textSize="20sp"/>
 
     <EditText
        android:layout_width="match_parent"
         android:layout_height="100dp"
         android:id="@+id/comment_area"
-        ></EditText>
+        android:layout_marginHorizontal="10dp"/>
 
-    <LinearLayout
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        >
 
-        <Button
-            android:layout_height="match_parent"
-            android:layout_width="150dp"
-            android:text="Save"
-            android:id="@+id/savebutton"
-            >
 
-        </Button>
-
-    </LinearLayout>
-
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_gravity="center"
+        android:text="Save"
+        android:id="@+id/savebutton"/>
 
 </LinearLayout>

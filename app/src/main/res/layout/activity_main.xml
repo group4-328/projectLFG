@@ -42,6 +42,7 @@
             android:paddingLeft="5dp"
             android:layout_width="match_parent"
             android:id="@+id/emailtextview"
+            android:textColor="@color/black"
             android:background="@drawable/rectanglebox"
             android:layout_height="35dp">
 
@@ -70,6 +71,7 @@
             android:paddingLeft="5dp"
             android:layout_width="match_parent"
             android:background="@drawable/rectanglebox"
+            android:textColor="@color/black"
             android:id="@+id/passwordtextview"
             android:layout_height="35dp">
         </EditText>
