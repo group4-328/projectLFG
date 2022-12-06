@@ -85,7 +85,7 @@
         android:elevation="2dp"
         android:gravity="center"
         android:padding="10dp"
-        android:text="contact list"
+        android:text="Other Users"
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="@+id/contactListImageButton"
         app:layout_constraintEnd_toEndOf="parent"
