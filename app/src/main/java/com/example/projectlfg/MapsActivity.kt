@@ -35,17 +35,6 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.tasks.await
 import okhttp3.internal.cache.DiskLruCache
 
-interface SetMarkers{
-    fun SetMarkersOnMap(mList:List<DBEventsInformation>);
-}
-
-interface GetRatingListener{
-    fun onSuccess(value:Long);
-}
-
-interface GetViewListener{
-    fun onSuccess(tmpview:View);
-}
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener ,GoogleMap.InfoWindowAdapter{
 

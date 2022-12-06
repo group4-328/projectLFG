@@ -32,7 +32,7 @@ class EventInfoActivity:AppCompatActivity() {
     private lateinit var EndDateAndTime:EditText;
     private lateinit var Attendees:EditText;
     private lateinit var Location:EditText;
-
+    private lateinit var Infotext:EditText;
     private lateinit var eventChatButton: Button
 
     private lateinit var CommentButton:Button;
@@ -64,6 +64,7 @@ class EventInfoActivity:AppCompatActivity() {
         totalratingbar = binding.totalratingbar
         CommentButton = binding.CommentEvent
         GotoComments = binding.goviewcomments
+        Infotext = binding.EventInformationtext
 
         eventChatButton = binding.eventChatButton
 
@@ -118,6 +119,8 @@ class EventInfoActivity:AppCompatActivity() {
         EndDateAndTime.setText(intent.getStringExtra(MapsActivity.ACTIVITYTYPESTR))
         Attendees.setText(intent.getLongExtra("Attendants",0).toString())
         Location.setText(intent.getStringExtra("LOCATION"));
+        Infotext.setText(intent.getStringExtra("info"))
+
     }
 
     fun getMyRatings(){
