@@ -30,14 +30,13 @@ class UserProfileViewModel: ViewModel() {
                 thisuser.email = arr.get("email") as String;
                 thisuser.name = arr.get("name") as String;
                 thisuser.imageuri = arr.get("imageuri") as String;
+                userdata.value = thisuser;
                 val db2 = FirebaseDatabase.getInstance().reference.child("events1")
                 db2.get().addOnSuccessListener {
                     val data = it.value as HashMap<String,*>
                     val totalsize=data.size
                     var counter = 1;
-                    if(totalsize == 0){
-                        userdata.value = thisuser;
-                    }
+
                     for((key,value) in data){
                         val tmpdata = data.get(key) as HashMap<String,*>;
                         val creator = tmpdata.get("creator") as String
@@ -58,11 +57,6 @@ class UserProfileViewModel: ViewModel() {
                         thisuser.eventsinfolist.add(DBEventsInformation(name = name, startingdate = startingdate, attendess = attendants, location = location,
                             latLng = LatLng(latitude,longtitude), information = info,id=tmpid, creator = creator, activitytypes = activitytypes ))
                         userdata.value= thisuser;
-
-//                        if(counter==totalsize){
-//                        }else{
-//                            counter++;
-//                        }
                     }
                 }
             }

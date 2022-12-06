@@ -83,7 +83,7 @@ class RegisterActivity : AppCompatActivity() {
             val EmailNotEmpty = TextUtils.isEmpty(EmailEditText.text.toString())
             val PasswordNotEmpty = TextUtils.isEmpty(PasswordEditText.text.toString())
 
-            if(!NameNotEmpty && !EmailNotEmpty && !PasswordNotEmpty){
+            if(!NameNotEmpty && !EmailNotEmpty && !PasswordNotEmpty && imageUri != null){
                 signUp(NameEditText.text.toString(),EmailEditText.text.toString(),PasswordEditText.text.toString())
             }else{
                 popUp(this, "please fill in user information")
@@ -124,7 +124,7 @@ class RegisterActivity : AppCompatActivity() {
 
                             val downloadUri= it.result;
                             val user = authenticator.currentUser;
-                            myref.child("users").child(user!!.uid).child("imageuri").setValue(uniqueid.toString())
+                            myref.child("users").child(user!!.uid).child("imageuri").setValue(downloadUri.toString())
                             finish()
                         }
 
