@@ -34,6 +34,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var EmailEditText: EditText;
     private lateinit var PasswordEditText: EditText;
     private lateinit var RegisterButton: Button;
+    private lateinit var SelectImgButton:Button;
     private lateinit var UserImageView : ImageView;
 
     private lateinit var authenticator: FirebaseAuth;
@@ -56,6 +57,7 @@ class RegisterActivity : AppCompatActivity() {
         PasswordEditText = binding.RegisterPassword
         RegisterButton = binding.RegisterButton
         UserImageView = binding.UserImageView;
+        SelectImgButton = binding.RegisterImgButton;
 
 
         storage = Firebase.storage;
@@ -66,7 +68,7 @@ class RegisterActivity : AppCompatActivity() {
         Util.checkPermissions(this);
 
 
-        UserImageView.setOnClickListener {
+        SelectImgButton.setOnClickListener {
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             ImageGalleryIntent.launch(gallery);
         }
